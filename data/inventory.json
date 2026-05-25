@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:48:58.814Z",
+  "updatedAt": "2026-05-25T02:51:01.695Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -31,9 +31,26 @@
       "unit": "Pieces",
       "notes": "",
       "addedAt": "2026-05-25T02:39:32.074Z"
+    },
+    {
+      "id": "2b7129a6-c035-4021-8acf-79a53d3165c1",
+      "name": "Eggs",
+      "location": "fridge",
+      "expirationDate": "2026-06-16",
+      "quantity": 1,
+      "unit": "Dozen",
+      "notes": "",
+      "addedAt": "2026-05-25T02:50:44.679Z"
     }
   ],
   "nameHistory": [
+    {
+      "name": "Eggs",
+      "location": "fridge",
+      "quantity": 1,
+      "unit": "Dozen",
+      "lastUsedAt": "2026-05-25T02:51:01.695Z"
+    },
     {
       "name": "Whole milk",
       "location": "fridge",
