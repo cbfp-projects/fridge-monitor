@@ -68,9 +68,17 @@ function assertHouseholdSecret(secret: string): void {
   }
 }
 
+const noStore: RequestInit = { cache: "no-store" };
+
+/** Loads latest inventory from GitHub API (production) or local mock JSON (dev). */
 export async function fetchInventory(): Promise<Inventory> {
+  if (isGitHubConfigured() && contentsToken) {
+    const { inventory } = await fetchInventoryFile();
+    return inventory;
+  }
+
   const url = `${rawInventoryUrl()}?t=${Date.now()}`;
-  const res = await fetch(url);
+  const res = await fetch(url, noStore);
   if (!res.ok) {
     throw new Error(`Failed to load inventory (${res.status})`);
   }
@@ -85,12 +93,12 @@ interface ContentsResponse {
 async function fetchInventoryFile(): Promise<{ sha: string; inventory: Inventory }> {
   const res = await fetch(
     `${apiBase()}/contents/${INVENTORY_PATH}?ref=${encodeURIComponent(branch)}`,
-    { headers: authHeaders() },
+    { ...noStore, headers: authHeaders() },
   );
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 401 || res.status === 403) {
-      throw new Error("Save failed: invalid token or missing Contents permission");
+      throw new Error("Failed to load inventory: invalid token or missing Contents permission");
     }
     throw new Error(`Failed to read inventory file (${res.status}): ${body || res.statusText}`);
   }
@@ -106,6 +114,7 @@ async function putInventoryFile(
 ): Promise<Inventory> {
   const body = `${JSON.stringify(inventory, null, 2)}\n`;
   const res = await fetch(`${apiBase()}/contents/${INVENTORY_PATH}`, {
+    ...noStore,
     method: "PUT",
     headers: authHeaders(),
     body: JSON.stringify({

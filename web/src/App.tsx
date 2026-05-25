@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   canSaveToGitHub,
   createEmptyItem,
@@ -30,17 +30,32 @@ export default function App() {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const canSave = canSaveToGitHub();
+  const syncingRef = useRef(false);
+  const savingRef = useRef(false);
+  useEffect(() => {
+    syncingRef.current = syncing;
+    savingRef.current = saving;
+  }, [syncing, saving]);
 
-  const load = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
-    setError(null);
+  const load = useCallback(async (options?: { background?: boolean }) => {
+    const background = options?.background ?? false;
+    if (background) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
+    if (!background) setError(null);
     try {
       const data = await fetchInventory();
       setInventory(data);
       setSyncError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load inventory");
+      const message = err instanceof Error ? err.message : "Failed to load inventory";
+      if (background) {
+        setSyncError(message);
+      } else {
+        setError(message);
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -48,9 +63,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps -- mount fetch
     void load();
-  }, []);
+  }, [load]);
+
+  useEffect(() => {
+    function refetchIfVisible() {
+      if (document.visibilityState !== "visible") return;
+      if (syncingRef.current || savingRef.current) return;
+      void load({ background: true });
+    }
+
+    document.addEventListener("visibilitychange", refetchIfVisible);
+    window.addEventListener("pageshow", refetchIfVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", refetchIfVisible);
+      window.removeEventListener("pageshow", refetchIfVisible);
+    };
+  }, [load]);
 
   const filteredItems = useMemo(() => {
     if (!inventory) return [];
@@ -156,7 +185,7 @@ export default function App() {
           <button
             type="button"
             className="btn btn-ghost"
-            onClick={() => load(true)}
+            onClick={() => load({ background: true })}
             disabled={refreshing || syncing}
           >
             {refreshing ? "Refreshing…" : "Refresh"}

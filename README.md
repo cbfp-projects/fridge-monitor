@@ -4,7 +4,7 @@ A household web app to track fridge and freezer contents with expiration dates. 
 
 ## Architecture
 
-- **Read:** The app fetches `data/inventory.json` from raw GitHub (or local mock JSON in dev).
+- **Read:** The app loads `data/inventory.json` via the GitHub Contents API (always current; refetches when you return to the tab). Local dev falls back to mock JSON.
 - **Write:** The app updates the same file via the [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) (~1–3s). The UI updates immediately (optimistic), then syncs in the background.
 - **Deploy:** Pushes to `main` that touch `web/` run [Deploy to GitHub Pages](.github/workflows/deploy.yml).
 
