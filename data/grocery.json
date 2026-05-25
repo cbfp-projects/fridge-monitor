@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T18:46:06.323Z",
+  "updatedAt": "2026-05-25T20:26:09.957Z",
   "items": [
     {
       "id": "65b0d041-1399-42a8-878e-68074d01481d",
@@ -17,6 +17,12 @@
       "quantity": 5,
       "checked": false,
       "addedAt": "2026-05-25T18:46:05.704Z"
+    },
+    {
+      "id": "5490bd72-8783-4f56-8c30-4c243f401791",
+      "name": "Maple syrup",
+      "checked": false,
+      "addedAt": "2026-05-25T20:26:09.501Z"
     }
   ]
 }
