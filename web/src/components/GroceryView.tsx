@@ -21,7 +21,7 @@ export function GroceryView({ grocery, loading, onToggle, onClearChecked }: Groc
   if (items.length === 0) {
     return (
       <p className="state-message state-empty">
-        Nothing on the list yet — tap Buy on a fridge item.
+        Nothing on the list yet — tap Add item below or Buy on a fridge item.
       </p>
     );
   }

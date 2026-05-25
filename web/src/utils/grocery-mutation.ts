@@ -69,10 +69,24 @@ export function groceryItemFromInventory(item: {
   quantity?: number;
   unit?: string;
 }): GroceryItem {
+  return createGroceryItem({
+    name: item.name,
+    sourceItemId: item.id,
+    quantity: item.quantity,
+    unit: item.unit,
+  });
+}
+
+export function createGroceryItem(item: {
+  name: string;
+  sourceItemId?: string;
+  quantity?: number;
+  unit?: string;
+}): GroceryItem {
   return {
     id: crypto.randomUUID(),
     name: item.name,
-    sourceItemId: item.id,
+    sourceItemId: item.sourceItemId,
     quantity: item.quantity,
     unit: item.unit,
     checked: false,

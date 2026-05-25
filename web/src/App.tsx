@@ -10,13 +10,14 @@ import { AddItemBar } from "./components/AddItemBar";
 import { AppHeader } from "./components/AppHeader";
 import { FridgeIcon } from "./components/FridgeIcon";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
+import { GroceryItemFormModal } from "./components/GroceryItemFormModal";
 import { GroceryView } from "./components/GroceryView";
 import { ItemCard } from "./components/ItemCard";
 import { ItemFormModal } from "./components/ItemFormModal";
 import type { AppScreen } from "./types/app";
-import type { GroceryList } from "./types/grocery";
+import type { GroceryItem, GroceryList } from "./types/grocery";
 import type { Inventory, InventoryAction, InventoryItem, LocationFilter } from "./types/inventory";
-import { applyGroceryMutation, groceryItemFromInventory } from "./utils/grocery-mutation";
+import { applyGroceryMutation, createGroceryItem, groceryItemFromInventory } from "./utils/grocery-mutation";
 import { applyInventoryMutation } from "./utils/inventory-mutation";
 import { formatDateTime } from "./utils/expiry";
 import "./App.css";
@@ -37,6 +38,7 @@ export default function App() {
   const [formMode, setFormMode] = useState<FormMode>(null);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
+  const [groceryFormOpen, setGroceryFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -132,10 +134,15 @@ export default function App() {
     return null;
   }, [screen, inventory, grocery, syncing]);
 
-  function openAdd() {
+  function openAddInventory() {
     setSaveError(null);
     setEditingItem(createEmptyItem(filter === "freezer" ? "freezer" : "fridge"));
     setFormMode("add");
+  }
+
+  function openAddGrocery() {
+    setSaveError(null);
+    setGroceryFormOpen(true);
   }
 
   function openEdit(item: InventoryItem) {
@@ -147,6 +154,11 @@ export default function App() {
   function closeForm() {
     setFormMode(null);
     setEditingItem(null);
+    setSaveError(null);
+  }
+
+  function closeGroceryForm() {
+    setGroceryFormOpen(false);
     setSaveError(null);
   }
 
@@ -184,6 +196,16 @@ export default function App() {
   async function handleBuy(item: InventoryItem) {
     if (grocerySourceIds.has(item.id)) return;
     const entry = groceryItemFromInventory(item);
+    await persistGrocery("add", entry, (prev) => applyGroceryMutation(prev, "add", entry));
+  }
+
+  async function handleGroceryAdd(item: Pick<GroceryItem, "name" | "quantity" | "unit">) {
+    if (!grocery) {
+      setSyncError("Failed to load grocery list");
+      return;
+    }
+    closeGroceryForm();
+    const entry = createGroceryItem(item);
     await persistGrocery("add", entry, (prev) => applyGroceryMutation(prev, "add", entry));
   }
 
@@ -251,11 +273,11 @@ export default function App() {
     await handleSave(secret, "delete", item);
   }
 
-  const showFridgeFooter = screen === "fridge" && !loading && !error;
+  const showFooter = (screen === "fridge" || screen === "grocery") && !loading && !error;
 
   return (
     <div
-      className={`app ${screen === "fridge" ? "app--fridge-screen" : ""} ${showFridgeFooter ? "app-with-footer" : ""}`}
+      className={`app ${screen === "fridge" ? "app--fridge-screen" : ""} ${showFooter ? "app-with-footer" : ""}`}
     >
       <AppHeader
         screen={screen}
@@ -345,7 +367,7 @@ export default function App() {
         </div>
       )}
 
-      {showFridgeFooter && <AddItemBar onAdd={openAdd} />}
+      {showFooter && <AddItemBar onAdd={screen === "grocery" ? openAddGrocery : openAddInventory} />}
 
       {screen === "grocery" && (
         <main className="main main-scroll">
@@ -370,6 +392,8 @@ export default function App() {
         onClose={closeForm}
         onSubmit={handleSave}
       />
+
+      {groceryFormOpen && <GroceryItemFormModal onClose={closeGroceryForm} onSubmit={handleGroceryAdd} />}
 
       <DeleteConfirmModal
         item={deletingItem}
