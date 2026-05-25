@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T20:26:09.957Z",
+  "updatedAt": "2026-05-25T20:26:22.964Z",
   "items": [
     {
       "id": "65b0d041-1399-42a8-878e-68074d01481d",
@@ -23,6 +23,14 @@
       "name": "Maple syrup",
       "checked": false,
       "addedAt": "2026-05-25T20:26:09.501Z"
+    },
+    {
+      "id": "309b490a-fbfd-481d-b718-6431c321a810",
+      "name": "Yuzu",
+      "quantity": 1,
+      "unit": "Pack",
+      "checked": false,
+      "addedAt": "2026-05-25T20:26:22.432Z"
     }
   ]
 }
