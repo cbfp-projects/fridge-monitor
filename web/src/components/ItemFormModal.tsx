@@ -1,11 +1,17 @@
-import { useState } from "react";
-import type { InventoryAction, InventoryItem } from "../types/inventory";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Inventory, InventoryAction, InventoryItem, NameHistoryEntry } from "../types/inventory";
+import {
+  buildSuggestionEntries,
+  filterSuggestions,
+  formatSuggestionMeta,
+} from "../utils/item-suggestions";
 
 const SECRET_KEY = "fridge-monitor-secret";
 
 interface ItemFormModalProps {
   mode: "add" | "edit";
   item: InventoryItem;
+  inventory: Inventory | null;
   open: boolean;
   saving: boolean;
   error: string | null;
@@ -17,6 +23,7 @@ interface ItemFormModalProps {
 export function ItemFormModal({
   mode,
   item,
+  inventory,
   open,
   saving,
   error,
@@ -26,11 +33,40 @@ export function ItemFormModal({
 }: ItemFormModalProps) {
   const [draft, setDraft] = useState(item);
   const [secret, setSecret] = useState(() => sessionStorage.getItem(SECRET_KEY) ?? "");
+  const [nameFocused, setNameFocused] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setDraft(item);
+    setNameFocused(false);
+  }, [item]);
+
+  const allSuggestions = useMemo(
+    () => (inventory ? buildSuggestionEntries(inventory) : []),
+    [inventory],
+  );
+
+  const visibleSuggestions = useMemo(() => {
+    if (mode !== "add" || !nameFocused) return [];
+    return filterSuggestions(allSuggestions, draft.name);
+  }, [mode, nameFocused, allSuggestions, draft.name]);
 
   if (!open) return null;
 
   function update<K extends keyof InventoryItem>(key: K, value: InventoryItem[K]) {
     setDraft((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function applySuggestion(entry: NameHistoryEntry) {
+    setDraft((prev) => ({
+      ...prev,
+      name: entry.name,
+      location: entry.location,
+      quantity: entry.quantity,
+      unit: entry.unit ?? "",
+    }));
+    setNameFocused(false);
+    nameInputRef.current?.focus();
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -67,15 +103,46 @@ export function ItemFormModal({
         </header>
 
         <form className="modal-form" onSubmit={handleSubmit}>
-          <label>
+          <label className="name-field">
             Name
             <input
+              ref={nameInputRef}
               required
               value={draft.name}
               onChange={(e) => update("name", e.target.value)}
+              onFocus={() => setNameFocused(true)}
+              onBlur={() => {
+                window.setTimeout(() => setNameFocused(false), 150);
+              }}
               placeholder="e.g. Greek yogurt"
               autoFocus
+              autoComplete="off"
+              aria-autocomplete="list"
+              aria-expanded={visibleSuggestions.length > 0}
+              aria-controls={visibleSuggestions.length > 0 ? "name-suggestions" : undefined}
             />
+            {visibleSuggestions.length > 0 && (
+              <ul id="name-suggestions" className="name-suggestions" role="listbox">
+                {visibleSuggestions.map((entry) => (
+                  <li key={entry.name} role="presentation">
+                    <button
+                      type="button"
+                      role="option"
+                      className="name-suggestion-row"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        applySuggestion(entry);
+                      }}
+                      onClick={() => applySuggestion(entry)}
+                    >
+                      <span className="name-suggestion-label">{entry.name}</span>
+                      <span className="name-suggestion-meta">{formatSuggestionMeta(entry)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </label>
 
           <label>

@@ -362,6 +362,7 @@ export default function App() {
         key={formMode === "add" ? "add" : (editingItem?.id ?? "edit")}
         mode={formMode === "add" ? "add" : "edit"}
         item={editingItem ?? createEmptyItem("fridge")}
+        inventory={inventory}
         open={formMode !== null}
         saving={saving}
         error={saveError}

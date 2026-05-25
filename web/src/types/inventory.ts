@@ -11,10 +11,19 @@ export interface InventoryItem {
   addedAt: string;
 }
 
+export interface NameHistoryEntry {
+  name: string;
+  location: Location;
+  quantity?: number;
+  unit?: string;
+  lastUsedAt: string;
+}
+
 export interface Inventory {
   version: number;
   updatedAt: string;
   items: InventoryItem[];
+  nameHistory?: NameHistoryEntry[];
 }
 
 export type InventoryAction = "add" | "update" | "delete";

@@ -34,8 +34,37 @@ try {
 if (!Array.isArray(data.items)) {
   data.items = [];
 }
+if (!Array.isArray(data.nameHistory)) {
+  data.nameHistory = [];
+}
 
+const NAME_HISTORY_MAX = 40;
 const now = new Date().toISOString();
+
+function normalizeName(name) {
+  return String(name).trim().toLowerCase();
+}
+
+function itemToHistoryEntry(item, lastUsedAt) {
+  const unit = item.unit != null ? String(item.unit).trim() : "";
+  return {
+    name: String(item.name).trim(),
+    location: item.location,
+    quantity: item.quantity,
+    unit: unit || undefined,
+    lastUsedAt,
+  };
+}
+
+function upsertNameHistory(history, item, lastUsedAt) {
+  const entry = itemToHistoryEntry(item, lastUsedAt);
+  const key = normalizeName(entry.name);
+  if (!key) return history;
+  const next = history.filter((h) => normalizeName(h.name) !== key);
+  next.push(entry);
+  next.sort((a, b) => b.lastUsedAt.localeCompare(a.lastUsedAt));
+  return next.slice(0, NAME_HISTORY_MAX);
+}
 
 switch (action) {
   case "add": {
@@ -47,10 +76,12 @@ switch (action) {
       console.error(`duplicate id: ${payload.id}`);
       process.exit(1);
     }
-    data.items.push({
+    const saved = {
       ...payload,
       addedAt: payload.addedAt ?? now,
-    });
+    };
+    data.items.push(saved);
+    data.nameHistory = upsertNameHistory(data.nameHistory, saved, now);
     break;
   }
   case "update": {
@@ -63,7 +94,9 @@ switch (action) {
       console.error(`item not found: ${payload.id}`);
       process.exit(1);
     }
-    data.items[idx] = { ...data.items[idx], ...payload };
+    const saved = { ...data.items[idx], ...payload };
+    data.items[idx] = saved;
+    data.nameHistory = upsertNameHistory(data.nameHistory, saved, now);
     break;
   }
   case "delete": {
@@ -71,12 +104,13 @@ switch (action) {
       console.error("delete requires id");
       process.exit(1);
     }
-    const before = data.items.length;
-    data.items = data.items.filter((i) => i.id !== payload.id);
-    if (data.items.length === before) {
+    const removed = data.items.find((i) => i.id === payload.id);
+    if (!removed) {
       console.error(`item not found: ${payload.id}`);
       process.exit(1);
     }
+    data.nameHistory = upsertNameHistory(data.nameHistory, removed, now);
+    data.items = data.items.filter((i) => i.id !== payload.id);
     break;
   }
   default:
