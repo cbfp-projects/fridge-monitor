@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:37:18.216Z",
+  "updatedAt": "2026-05-25T21:37:22.519Z",
   "shoppingBag": [],
   "items": [
     {
       "id": "eeba1a12-2359-40ab-b5ae-d19b05899dc2",
       "name": "Bananas",
       "quantity": 5,
-      "checked": true,
+      "checked": false,
       "addedAt": "2026-05-25T18:46:05.704Z"
     },
     {
