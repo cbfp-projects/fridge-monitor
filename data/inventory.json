@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T00:55:31.606Z",
+  "updatedAt": "2026-05-25T00:57:07.351Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -21,16 +21,6 @@
       "unit": "bag",
       "notes": "",
       "addedAt": "2026-05-20T08:00:00Z"
-    },
-    {
-      "id": "faff0386-661f-4a5e-95d5-322d98b22198",
-      "name": "Greek yogurt",
-      "location": "fridge",
-      "expirationDate": "2026-05-25",
-      "quantity": 1,
-      "unit": "oz",
-      "notes": "",
-      "addedAt": "2026-05-25T00:47:31.231Z"
     },
     {
       "id": "389fcb79-0b79-4086-a1b6-75e14f554645",
