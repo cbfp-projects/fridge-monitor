@@ -13,6 +13,7 @@ export interface GroceryList {
   updatedAt: string;
   items: GroceryItem[];
   shoppingBag?: GroceryItem[];
+  history?: GroceryItem[];
 }
 
 export type GroceryAction =
@@ -21,7 +22,8 @@ export type GroceryAction =
   | "delete"
   | "clearChecked"
   | "checkInBag"
-  | "removeBagItem";
+  | "removeBagItem"
+  | "restoreFromHistory";
 
 export interface GroceryUpdateRequest {
   action: GroceryAction;

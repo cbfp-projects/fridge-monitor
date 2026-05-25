@@ -464,8 +464,40 @@ body {
   min-height: 52px;
 }
 
-.grocery-row-checked {
+.grocery-row-history {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  min-height: 52px;
   opacity: 0.65;
+}
+
+.grocery-row-history .grocery-row-name {
+  text-decoration: line-through;
+}
+
+.grocery-row-history .grocery-row-text {
+  flex: 1;
+}
+
+.btn-restore {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  min-height: 36px;
+  color: var(--primary);
+  border-color: var(--primary);
+  background: transparent;
+  opacity: 1;
+}
+
+.btn-restore:hover:not(:disabled) {
+  background: var(--primary);
+  color: #fff;
 }
 
 .grocery-row-checked .grocery-row-name {

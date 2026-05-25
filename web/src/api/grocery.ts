@@ -30,6 +30,8 @@ export async function saveGroceryUpdate(request: GroceryUpdateRequest): Promise<
       ? "checked items"
       : request.action === "removeBagItem"
         ? `bag ${(request.payload as Pick<GroceryItem, "id">).id}`
+      : request.action === "restoreFromHistory"
+        ? `history ${(request.payload as Pick<GroceryItem, "id">).id}`
       : request.action === "toggle" || request.action === "delete"
         ? (request.payload as Pick<GroceryItem, "id">).id
         : (request.payload as GroceryItem).name;
