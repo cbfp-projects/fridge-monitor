@@ -19,7 +19,10 @@ export function ItemCard({ item, onBuy, onEdit, onDelete, onGroceryList }: ItemC
   return (
     <article className="item-card">
       <div className="item-card-main">
-        <h3 className="item-name">{item.name}</h3>
+        <div className="item-card-header">
+          <h3 className="item-name">{item.name}</h3>
+          <ExpiryBadge expirationDate={item.expirationDate} />
+        </div>
         <p className="item-meta">
           <span className={`location-pill location-${item.location}`}>
             {item.location}
@@ -34,7 +37,6 @@ export function ItemCard({ item, onBuy, onEdit, onDelete, onGroceryList }: ItemC
           )}
         </p>
         {item.notes ? <p className="item-notes">{item.notes}</p> : null}
-        <ExpiryBadge expirationDate={item.expirationDate} />
       </div>
       <div className="item-actions">
         <button
