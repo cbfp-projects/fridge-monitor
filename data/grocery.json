@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:27:50.919Z",
+  "updatedAt": "2026-05-25T21:28:48.775Z",
   "shoppingBag": [],
   "items": [
     {
@@ -23,6 +23,12 @@
       "unit": "Pack",
       "checked": false,
       "addedAt": "2026-05-25T20:26:22.432Z"
+    },
+    {
+      "id": "96c795a0-ce96-4db6-b1b0-4c1527de65d7",
+      "name": "Canola oil",
+      "checked": false,
+      "addedAt": "2026-05-25T21:28:48.192Z"
     }
   ]
 }
