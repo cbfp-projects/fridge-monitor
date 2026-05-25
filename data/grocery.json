@@ -1,14 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T22:04:54.952Z",
-  "shoppingBag": [
-    {
-      "id": "6f086545-ea05-432a-89a9-bb50c9bd1cd7",
-      "name": "Test",
-      "checked": false,
-      "addedAt": "2026-05-25T22:04:48.193Z"
-    }
-  ],
+  "updatedAt": "2026-05-25T22:05:00.484Z",
+  "shoppingBag": [],
   "items": [
     {
       "id": "eeba1a12-2359-40ab-b5ae-d19b05899dc2",
@@ -38,5 +31,12 @@
       "addedAt": "2026-05-25T21:28:48.192Z"
     }
   ],
-  "history": []
+  "history": [
+    {
+      "id": "6f086545-ea05-432a-89a9-bb50c9bd1cd7",
+      "name": "Test",
+      "checked": false,
+      "addedAt": "2026-05-25T22:04:48.193Z"
+    }
+  ]
 }
