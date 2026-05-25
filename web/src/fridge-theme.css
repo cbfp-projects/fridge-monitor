@@ -1,0 +1,485 @@
+/* Playful “inside the fridge” theme — Fridge Monitor tab */
+
+.app--fridge-screen {
+  --fridge-mid: #e0f2fe;
+  background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 12%, var(--bg) 28%);
+}
+
+/* ── Cavity shell (outer door frame) ── */
+.fridge-interior {
+  --fridge-wall: #64748b;
+  --fridge-gasket: #334155;
+  --fridge-light: #f8fafc;
+  --fridge-mid: #e0f2fe;
+  --fridge-deep: #bae6fd;
+  --fridge-shelf: #94a3b8;
+  --fridge-rail: #cbd5e1;
+  --fridge-card-bg: rgba(255, 255, 255, 0.88);
+  --fridge-card-border: rgba(255, 255, 255, 0.98);
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.65rem 0.4rem;
+  border-radius: 14px 14px 10px 10px;
+  border: 5px solid var(--fridge-gasket);
+  outline: 2px solid var(--fridge-wall);
+  outline-offset: -1px;
+  background:
+    linear-gradient(90deg, rgba(71, 85, 105, 0.08) 0%, transparent 8%, transparent 92%, rgba(71, 85, 105, 0.08) 100%),
+    linear-gradient(180deg, var(--fridge-light) 0%, var(--fridge-mid) 38%, var(--fridge-deep) 100%);
+  box-shadow:
+    inset 0 0 60px rgba(255, 255, 255, 0.85),
+    inset 12px 0 32px rgba(51, 65, 85, 0.14),
+    inset -12px 0 32px rgba(51, 65, 85, 0.14),
+    inset 0 -20px 40px rgba(186, 230, 253, 0.5),
+    0 8px 28px rgba(15, 23, 42, 0.2);
+  overflow: hidden;
+}
+
+/* Ceiling light */
+.fridge-interior::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 38%;
+  background: radial-gradient(ellipse 100% 80% at 50% -5%, rgba(255, 255, 255, 1) 0%, rgba(224, 242, 254, 0.4) 45%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle interior texture */
+.fridge-interior::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.04) 3px,
+    rgba(255, 255, 255, 0.04) 5px
+  );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.fridge-door-gasket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(180deg, #1e293b 0%, #475569 40%, #64748b 100%);
+  border-radius: 8px 8px 0 0;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fridge-led-bar {
+  position: absolute;
+  top: 12px;
+  left: 12%;
+  right: 12%;
+  height: 5px;
+  background: linear-gradient(90deg, transparent, #fef08a 15%, #fff 50%, #fef08a 85%, transparent);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(254, 240, 138, 0.9), 0 0 24px rgba(255, 255, 255, 0.6);
+  z-index: 2;
+  opacity: 0.95;
+}
+
+.fridge-interior > *:not(.fridge-door-gasket):not(.fridge-led-bar) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Fresh fridge filter (warmer / greener) ── */
+.fridge-interior[data-location="fridge"] {
+  --fridge-light: #f0fdf4;
+  --fridge-mid: #dcfce7;
+  --fridge-deep: #bbf7d0;
+  --fridge-wall: #65a30d;
+  outline-color: #4ade80;
+}
+
+.fridge-interior[data-location="fridge"]::before {
+  background: radial-gradient(ellipse 100% 80% at 50% -5%, rgba(255, 255, 255, 1) 0%, rgba(220, 252, 231, 0.5) 50%, transparent 78%);
+}
+
+/* ── Freezer compartment (icy, frosted) ── */
+.fridge-interior[data-location="freezer"] {
+  --fridge-light: #ecfeff;
+  --fridge-mid: #a5f3fc;
+  --fridge-deep: #67e8f9;
+  --fridge-wall: #0e7490;
+  --fridge-gasket: #164e63;
+  --fridge-shelf: rgba(14, 116, 144, 0.55);
+  --fridge-card-bg: rgba(240, 249, 255, 0.92);
+  --fridge-card-border: rgba(186, 230, 253, 0.95);
+  outline-color: #22d3ee;
+  background:
+    linear-gradient(90deg, rgba(8, 145, 178, 0.12) 0%, transparent 10%, transparent 90%, rgba(8, 145, 178, 0.12) 100%),
+    linear-gradient(180deg, #f0fdfa 0%, #cffafe 25%, #a5f3fc 55%, #22d3ee 100%);
+  box-shadow:
+    inset 0 0 50px rgba(186, 230, 253, 0.9),
+    inset 0 0 80px rgba(103, 232, 249, 0.35),
+    inset 12px 0 36px rgba(21, 94, 117, 0.2),
+    inset -12px 0 36px rgba(21, 94, 117, 0.2),
+    0 8px 32px rgba(14, 116, 144, 0.35);
+}
+
+.fridge-interior[data-location="freezer"]::before {
+  background: radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255, 255, 255, 0.7) 0%, rgba(165, 243, 252, 0.3) 50%, transparent 80%);
+}
+
+.fridge-interior[data-location="freezer"]::after {
+  opacity: 1;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 6px,
+      rgba(255, 255, 255, 0.07) 6px,
+      rgba(255, 255, 255, 0.07) 7px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 40px,
+      rgba(255, 255, 255, 0.05) 40px,
+      rgba(255, 255, 255, 0.05) 41px
+    );
+}
+
+.fridge-interior[data-location="freezer"] .fridge-led-bar {
+  background: linear-gradient(90deg, transparent, #cffafe 20%, #ecfeff 50%, #cffafe 80%, transparent);
+  box-shadow: 0 0 14px rgba(165, 243, 252, 0.95);
+}
+
+.fridge-interior .location-tabs {
+  margin-top: 0.15rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(241, 245, 249, 0.5) 100%);
+  border: 2px solid rgba(100, 116, 139, 0.45);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(148, 163, 184, 0.3),
+    0 3px 8px rgba(51, 65, 85, 0.12);
+  flex-shrink: 0;
+}
+
+.fridge-interior .tab {
+  color: #475569;
+}
+
+.fridge-interior .tab-freezer.tab-active {
+  background: linear-gradient(180deg, #ecfeff 0%, #a5f3fc 100%);
+  color: #0c4a6e;
+  border: 1px solid #22d3ee;
+}
+
+.fridge-interior .tab-fridge.tab-active {
+  background: linear-gradient(180deg, #ffffff 0%, #bbf7d0 100%);
+  color: #166534;
+  border: 1px solid #4ade80;
+}
+
+.fridge-interior .tab-active:not(.tab-freezer):not(.tab-fridge) {
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+  color: #0369a1;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+}
+
+.fridge-interior .tab-icon--glyph {
+  font-size: 1.2rem;
+}
+
+.fridge-interior .main-scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 0.25rem 0.35rem 0;
+  margin: 0 0.15rem;
+  border-left: 4px solid var(--fridge-rail);
+  border-right: 4px solid var(--fridge-rail);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fridge-interior[data-location="freezer"] .main-scroll {
+  border-left-color: rgba(103, 232, 249, 0.6);
+  border-right-color: rgba(103, 232, 249, 0.6);
+  background: rgba(207, 250, 254, 0.15);
+}
+
+.fridge-interior .item-list {
+  gap: 0;
+}
+
+.fridge-interior .item-list > li {
+  position: relative;
+  padding: 0.7rem 0 0.85rem;
+}
+
+/* Shelf bracket + glass shelf */
+.fridge-interior .item-list > li::before {
+  content: "";
+  position: absolute;
+  left: -0.35rem;
+  right: -0.35rem;
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(180deg, #e2e8f0 0%, var(--fridge-shelf) 40%, #64748b 100%);
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.6), 0 4px 6px rgba(51, 65, 85, 0.15);
+}
+
+
+.fridge-interior[data-location="freezer"] .item-list > li::before {
+  background: linear-gradient(180deg, #cffafe 0%, #22d3ee 50%, #0891b2 100%);
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.35);
+}
+
+.fridge-interior .item-list > li:last-child::before {
+  display: none;
+}
+
+.fridge-interior .item-card {
+  background: var(--fridge-card-bg);
+  border: 2px solid var(--fridge-card-border);
+  border-radius: 10px;
+  box-shadow:
+    0 3px 10px rgba(14, 116, 144, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(148, 163, 184, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Per-item zone styling when viewing "All" */
+.fridge-interior[data-location="all"] .item-card--freezer {
+  background: rgba(236, 254, 255, 0.92);
+  border-color: #67e8f9;
+  box-shadow:
+    0 2px 12px rgba(6, 182, 212, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+    inset 0 2px 0 rgba(207, 250, 254, 1);
+}
+
+.fridge-interior[data-location="all"] .item-card--fridge {
+  background: rgba(240, 253, 244, 0.92);
+  border-color: #86efac;
+  box-shadow:
+    0 2px 10px rgba(34, 197, 94, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 1);
+}
+
+.fridge-interior[data-location="freezer"] .item-card,
+.fridge-interior .item-card--freezer {
+  background: rgba(240, 249, 255, 0.94);
+  border-color: #7dd3fc;
+  box-shadow:
+    0 2px 14px rgba(6, 182, 212, 0.22),
+    inset 0 0 12px rgba(186, 230, 253, 0.5);
+}
+
+.fridge-interior[data-location="freezer"] .item-card .item-name::after,
+.fridge-interior .item-card--freezer .item-name::after {
+  content: " ❄";
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+
+.fridge-interior .item-notes,
+.fridge-interior .item-qty {
+  color: #475569;
+}
+
+.fridge-interior .item-name {
+  color: #0f172a;
+}
+
+.fridge-interior .btn-edit-inline {
+  background: #fff;
+  border-color: #64748b;
+  color: #1e293b;
+}
+
+.fridge-interior .btn-edit-inline:hover {
+  color: #0369a1;
+  border-color: #0284c7;
+  background: #f0f9ff;
+}
+
+.fridge-interior .btn-action {
+  background: #fff;
+  border-color: #cbd5e1;
+  color: #1e293b;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.fridge-interior .btn-buy:not(:disabled) {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+  color: #5b21b6;
+}
+
+.fridge-interior .btn-action-danger {
+  background: #fff;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.fridge-interior .state-message {
+  color: #475569;
+}
+
+/* Bottom crisper drawer */
+.app--fridge-screen .app-footer-add {
+  background: linear-gradient(transparent, var(--fridge-mid) 30%, #94a3b8 100%);
+  padding-left: 1.35rem;
+  padding-right: 1.35rem;
+}
+
+.app--fridge-screen .app-footer-add::before {
+  content: "";
+  display: block;
+  height: 6px;
+  margin: 0 auto 0.35rem;
+  max-width: 200px;
+  background: repeating-linear-gradient(90deg, #64748b 0, #64748b 4px, #334155 4px, #334155 8px);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.app--fridge-screen .add-item-bar {
+  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 15%, #bae6fd 70%, #7dd3fc 100%);
+  color: #0c4a6e;
+  border: 3px solid #94a3b8;
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -2px 6px rgba(100, 116, 139, 0.25),
+    0 -6px 16px rgba(14, 116, 144, 0.2),
+    0 6px 16px rgba(15, 23, 42, 0.15);
+  border-radius: 12px 12px 8px 8px;
+}
+
+.app--fridge-screen .add-item-bar::before {
+  content: "Crisper drawer";
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 0.2rem;
+}
+
+.app--fridge-screen .add-item-bar:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 50%, #38bdf8 100%);
+}
+
+.app--fridge-screen .add-item-bar-icon {
+  color: #0284c7;
+  font-size: 1.6rem;
+}
+
+.app--fridge-screen[data-freezer-footer] .add-item-bar,
+.app--fridge-screen:has(.fridge-interior[data-location="freezer"]) .add-item-bar {
+  background: linear-gradient(180deg, #ecfeff 0%, #a5f3fc 50%, #0891b2 100%);
+  border-color: #22d3ee;
+  color: #164e63;
+}
+
+.app--fridge-screen:has(.fridge-interior[data-location="freezer"]) .add-item-bar::before {
+  content: "Add to freezer";
+}
+
+.app--fridge-screen:has(.fridge-interior[data-location="fridge"]) .add-item-bar::before {
+  content: "Add to fridge";
+}
+
+.app--fridge-screen .screen-tab-active.screen-tab-fridge {
+  color: #0369a1;
+  border-bottom-color: #38bdf8;
+}
+
+.app--fridge-screen .btn-icon-refresh {
+  border: 2px solid #94a3b8;
+  background: linear-gradient(180deg, #fff 0%, #e2e8f0 100%);
+  color: #0369a1;
+  box-shadow: 0 2px 6px rgba(51, 65, 85, 0.15);
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  .app--fridge-screen {
+    background: linear-gradient(180deg, #334155 0%, #1e293b 15%, var(--bg) 30%);
+  }
+
+  .fridge-interior {
+    --fridge-gasket: #0f172a;
+    --fridge-wall: #475569;
+    --fridge-light: #1e3a5f;
+    --fridge-mid: #1e40af;
+    --fridge-deep: #172554;
+    --fridge-shelf: #475569;
+    --fridge-rail: #334155;
+    --fridge-card-bg: rgba(30, 41, 59, 0.88);
+    --fridge-card-border: rgba(148, 163, 184, 0.4);
+  }
+
+  .fridge-interior[data-location="fridge"] {
+    --fridge-light: #14532d;
+    --fridge-mid: #166534;
+    --fridge-deep: #052e16;
+    outline-color: #22c55e;
+  }
+
+  .fridge-interior[data-location="freezer"] {
+    --fridge-light: #083344;
+    --fridge-mid: #0e7490;
+    --fridge-deep: #155e75;
+    --fridge-card-bg: rgba(8, 51, 68, 0.9);
+    outline-color: #22d3ee;
+  }
+
+  .fridge-interior .item-name {
+    color: #f1f5f9;
+  }
+
+  .fridge-interior .item-notes,
+  .fridge-interior .item-qty {
+    color: #94a3b8;
+  }
+
+  .fridge-interior .btn-edit-inline {
+    background: #334155;
+    border-color: #94a3b8;
+    color: #f1f5f9;
+  }
+
+  .fridge-interior .btn-edit-inline:hover {
+    background: #1e3a5f;
+    color: #7dd3fc;
+  }
+
+  .fridge-interior .btn-action {
+    background: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+
+  .app--fridge-screen .add-item-bar {
+    background: linear-gradient(180deg, #334155 0%, #1e3a8a 70%, #1d4ed8 100%);
+    color: #e0f2fe;
+    border-color: #64748b;
+  }
+
+  .app--fridge-screen .app-footer-add {
+    background: linear-gradient(transparent, #1e293b 35%, #0f172a 100%);
+  }
+}

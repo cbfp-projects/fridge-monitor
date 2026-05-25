@@ -1,5 +1,5 @@
 import type { InventoryItem } from "../types/inventory";
-import { formatDate } from "../utils/expiry";
+import { EditIcon } from "./EditIcon";
 import { ExpiryBadge } from "./ExpiryBadge";
 
 interface ItemCardProps {
@@ -17,25 +17,21 @@ export function ItemCard({ item, onBuy, onEdit, onDelete, onGroceryList }: ItemC
       : null;
 
   return (
-    <article className="item-card">
+    <article className={`item-card item-card--${item.location}`}>
       <div className="item-card-main">
         <div className="item-card-header">
           <h3 className="item-name">{item.name}</h3>
+          {qty ? <span className="item-qty">{qty}</span> : null}
+          <button
+            type="button"
+            className="btn btn-edit-inline"
+            onClick={() => onEdit(item)}
+            aria-label={`Edit ${item.name}`}
+          >
+            <EditIcon />
+          </button>
           <ExpiryBadge expirationDate={item.expirationDate} />
         </div>
-        <p className="item-meta">
-          <span className={`location-pill location-${item.location}`}>
-            {item.location}
-          </span>
-          <span>·</span>
-          <span>{formatDate(item.expirationDate)}</span>
-          {qty && (
-            <>
-              <span>·</span>
-              <span>{qty}</span>
-            </>
-          )}
-        </p>
         {item.notes ? <p className="item-notes">{item.notes}</p> : null}
       </div>
       <div className="item-actions">
@@ -48,10 +44,11 @@ export function ItemCard({ item, onBuy, onEdit, onDelete, onGroceryList }: ItemC
         >
           Buy
         </button>
-        <button type="button" className="btn btn-action" onClick={() => onEdit(item)}>
-          Edit
-        </button>
-        <button type="button" className="btn btn-action btn-action-danger" onClick={() => onDelete(item)}>
+        <button
+          type="button"
+          className="btn btn-action btn-action-danger"
+          onClick={() => onDelete(item)}
+        >
           Remove
         </button>
       </div>

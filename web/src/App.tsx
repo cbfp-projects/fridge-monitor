@@ -8,6 +8,7 @@ import {
 } from "./api/inventory";
 import { AddItemBar } from "./components/AddItemBar";
 import { AppHeader } from "./components/AppHeader";
+import { FridgeIcon } from "./components/FridgeIcon";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
 import { GroceryView } from "./components/GroceryView";
 import { ItemCard } from "./components/ItemCard";
@@ -19,6 +20,7 @@ import { applyGroceryMutation, groceryItemFromInventory } from "./utils/grocery-
 import { applyInventoryMutation } from "./utils/inventory-mutation";
 import { formatDateTime } from "./utils/expiry";
 import "./App.css";
+import "./fridge-theme.css";
 
 type FormMode = "add" | "edit" | null;
 
@@ -252,7 +254,9 @@ export default function App() {
   const showFridgeFooter = screen === "fridge" && !loading && !error;
 
   return (
-    <div className={`app ${showFridgeFooter ? "app-with-footer" : ""}`}>
+    <div
+      className={`app ${screen === "fridge" ? "app--fridge-screen" : ""} ${showFridgeFooter ? "app-with-footer" : ""}`}
+    >
       <AppHeader
         screen={screen}
         onScreenChange={setScreen}
@@ -269,16 +273,40 @@ export default function App() {
       )}
 
       {screen === "fridge" && (
-        <>
+        <div
+          className="fridge-interior"
+          data-location={filter}
+          role="region"
+          aria-label={
+            filter === "freezer"
+              ? "Freezer compartment"
+              : filter === "fridge"
+                ? "Refrigerator compartment"
+                : "Refrigerator interior"
+          }
+        >
+          <div className="fridge-door-gasket" aria-hidden="true" />
+          <div className="fridge-led-bar" aria-hidden="true" />
           <nav className="tabs location-tabs" aria-label="Filter by location">
             {(["all", "fridge", "freezer"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`tab ${filter === tab ? "tab-active" : ""}`}
+                className={`tab tab-${tab} ${filter === tab ? "tab-active" : ""}${tab !== "all" ? " tab--icon-only" : ""}`}
                 onClick={() => setFilter(tab)}
+                aria-label={tab === "fridge" ? "Fridge" : tab === "freezer" ? "Freezer" : undefined}
               >
-                {tab === "all" ? "All" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === "freezer" && (
+                  <span className="tab-icon tab-icon--glyph" aria-hidden>
+                    ❄
+                  </span>
+                )}
+                {tab === "fridge" && (
+                  <span className="tab-icon tab-icon--svg" aria-hidden>
+                    <FridgeIcon />
+                  </span>
+                )}
+                {tab === "all" && "All"}
                 <span className="tab-count">{counts[tab]}</span>
               </button>
             ))}
@@ -314,9 +342,10 @@ export default function App() {
             </ul>
           </main>
 
-          {showFridgeFooter && <AddItemBar onAdd={openAdd} />}
-        </>
+        </div>
       )}
+
+      {showFridgeFooter && <AddItemBar onAdd={openAdd} />}
 
       {screen === "grocery" && (
         <main className="main main-scroll">

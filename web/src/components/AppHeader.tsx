@@ -24,7 +24,7 @@ export function AppHeader({
         <nav className="screen-tabs" aria-label="App sections">
           <button
             type="button"
-            className={`screen-tab ${screen === "fridge" ? "screen-tab-active" : ""}`}
+            className={`screen-tab ${screen === "fridge" ? "screen-tab-active screen-tab-fridge" : ""}`}
             onClick={() => onScreenChange("fridge")}
           >
             Fridge Monitor
