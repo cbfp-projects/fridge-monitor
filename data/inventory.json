@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:46:54.406Z",
+  "updatedAt": "2026-05-25T02:48:39.052Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -8,7 +8,7 @@
       "location": "fridge",
       "expirationDate": "2026-05-30",
       "quantity": 1,
-      "unit": "gal",
+      "unit": "Quart",
       "notes": "",
       "addedAt": "2026-05-24T10:00:00Z"
     },
@@ -34,6 +34,13 @@
     }
   ],
   "nameHistory": [
+    {
+      "name": "Whole milk",
+      "location": "fridge",
+      "quantity": 1,
+      "unit": "Quart",
+      "lastUsedAt": "2026-05-25T02:48:39.052Z"
+    },
     {
       "name": "Spindrift",
       "location": "fridge",
