@@ -7,6 +7,7 @@
 
 /* ── Cavity shell (outer door frame) ── */
 .fridge-interior {
+  color-scheme: light;
   --fridge-wall: #64748b;
   --fridge-gasket: #334155;
   --fridge-light: #f8fafc;
@@ -367,17 +368,6 @@
   border-radius: 12px 12px 8px 8px;
 }
 
-.app--fridge-screen .add-item-bar::before {
-  content: "Crisper drawer";
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.55;
-  margin-bottom: 0.2rem;
-}
-
 .app--fridge-screen .add-item-bar:hover {
   background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 50%, #38bdf8 100%);
 }
@@ -392,14 +382,6 @@
   background: linear-gradient(180deg, #ecfeff 0%, #a5f3fc 50%, #0891b2 100%);
   border-color: #22d3ee;
   color: #164e63;
-}
-
-.app--fridge-screen:has(.fridge-interior[data-location="freezer"]) .add-item-bar::before {
-  content: "Add to freezer";
-}
-
-.app--fridge-screen:has(.fridge-interior[data-location="fridge"]) .add-item-bar::before {
-  content: "Add to fridge";
 }
 
 .app--fridge-screen .screen-tab-active.screen-tab-fridge {
@@ -447,6 +429,7 @@
     outline-color: #22d3ee;
   }
 
+  /* Default: light text on dark-tinted cards (fridge-only filter, etc.) */
   .fridge-interior .item-name {
     color: #f1f5f9;
   }
@@ -454,6 +437,25 @@
   .fridge-interior .item-notes,
   .fridge-interior .item-qty {
     color: #94a3b8;
+  }
+
+  /* Light card surfaces keep dark text (common on phone in dark mode) */
+  .fridge-interior[data-location="all"] .item-card--fridge .item-name,
+  .fridge-interior[data-location="all"] .item-card--freezer .item-name,
+  .fridge-interior[data-location="freezer"] .item-card .item-name,
+  .fridge-interior .item-card--freezer .item-name {
+    color: #0f172a;
+  }
+
+  .fridge-interior[data-location="all"] .item-card--fridge .item-qty,
+  .fridge-interior[data-location="all"] .item-card--fridge .item-notes,
+  .fridge-interior[data-location="all"] .item-card--freezer .item-qty,
+  .fridge-interior[data-location="all"] .item-card--freezer .item-notes,
+  .fridge-interior[data-location="freezer"] .item-card .item-qty,
+  .fridge-interior[data-location="freezer"] .item-card .item-notes,
+  .fridge-interior .item-card--freezer .item-qty,
+  .fridge-interior .item-card--freezer .item-notes {
+    color: #475569;
   }
 
   .fridge-interior .btn-edit-inline {
