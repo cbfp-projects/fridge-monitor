@@ -234,6 +234,12 @@ export default function App() {
     );
   }
 
+  function handleRestoreFromHistory(item: GroceryItem) {
+    void persistGrocery("restoreFromHistory", { id: item.id }, (prev) =>
+      applyGroceryMutation(prev, "restoreFromHistory", { id: item.id }),
+    );
+  }
+
   function handleGroceryCheckInBag() {
     void persistGrocery("checkInBag", { id: "" }, (prev) =>
       applyGroceryMutation(prev, "checkInBag", { id: "" }),
@@ -422,6 +428,7 @@ export default function App() {
             onToggle={handleGroceryToggle}
             onClearChecked={handleGroceryClearChecked}
             onCheckInBag={handleGroceryCheckInBag}
+            onRestoreFromHistory={handleRestoreFromHistory}
           />
         </main>
       )}
