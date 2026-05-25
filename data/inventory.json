@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T00:48:00.960Z",
+  "updatedAt": "2026-05-25T00:55:31.606Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -31,6 +31,15 @@
       "unit": "oz",
       "notes": "",
       "addedAt": "2026-05-25T00:47:31.231Z"
+    },
+    {
+      "id": "389fcb79-0b79-4086-a1b6-75e14f554645",
+      "name": "Test 2",
+      "location": "fridge",
+      "expirationDate": "2026-05-25",
+      "unit": "",
+      "notes": "",
+      "addedAt": "2026-05-25T00:55:17.211Z"
     }
   ]
 }
