@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:38:32.560Z",
+  "updatedAt": "2026-05-25T21:38:39.623Z",
   "shoppingBag": [],
   "items": [
     {
@@ -33,7 +33,7 @@
     {
       "id": "57fc90a2-9dc6-487b-ac70-71d7ecb6a17b",
       "name": "Test",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-05-25T21:38:32.560Z"
     }
   ],
