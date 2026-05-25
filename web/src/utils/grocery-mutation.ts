@@ -6,6 +6,7 @@ export function applyGroceryMutation(
   payload: GroceryItem | Pick<GroceryItem, "id">,
 ): GroceryList {
   const items = Array.isArray(data.items) ? [...data.items] : [];
+  const shoppingBag = Array.isArray(data.shoppingBag) ? [...data.shoppingBag] : [];
   const now = new Date().toISOString();
 
   switch (action) {
@@ -51,6 +52,25 @@ export function applyGroceryMutation(
       items.push(...next);
       break;
     }
+    case "checkInBag": {
+      const checkedItems = items.filter((i) => i.checked);
+      if (checkedItems.length === 0) {
+        throw new Error("No checked items to check in");
+      }
+      const remaining = items.filter((i) => !i.checked);
+      items.length = 0;
+      items.push(...remaining);
+      shoppingBag.push(...checkedItems.map((item) => ({ ...item, checked: false })));
+      break;
+    }
+    case "removeBagItem": {
+      const { id } = payload as Pick<GroceryItem, "id">;
+      const next = shoppingBag.filter((i) => i.id !== id);
+      if (next.length === shoppingBag.length) throw new Error("Bag item not found");
+      shoppingBag.length = 0;
+      shoppingBag.push(...next);
+      break;
+    }
     default:
       throw new Error(`Unknown action: ${action}`);
   }
@@ -60,6 +80,7 @@ export function applyGroceryMutation(
     version: data.version ?? 1,
     updatedAt: now,
     items,
+    shoppingBag,
   };
 }
 

@@ -26,8 +26,10 @@ export async function saveGroceryUpdate(request: GroceryUpdateRequest): Promise<
   const { sha, grocery } = await fetchGroceryFile();
   const updated = applyGroceryMutation(grocery, request.action, request.payload);
   const label =
-    request.action === "clearChecked"
+    request.action === "clearChecked" || request.action === "checkInBag"
       ? "checked items"
+      : request.action === "removeBagItem"
+        ? `bag ${(request.payload as Pick<GroceryItem, "id">).id}`
       : request.action === "toggle" || request.action === "delete"
         ? (request.payload as Pick<GroceryItem, "id">).id
         : (request.payload as GroceryItem).name;

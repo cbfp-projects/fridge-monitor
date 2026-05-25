@@ -8,6 +8,7 @@ interface AppHeaderProps {
   refreshing: boolean;
   onRefresh: () => void;
   groceryCount: number;
+  shoppingBagCount: number;
 }
 
 export function AppHeader({
@@ -17,6 +18,7 @@ export function AppHeader({
   refreshing,
   onRefresh,
   groceryCount,
+  shoppingBagCount,
 }: AppHeaderProps) {
   return (
     <header className="app-header">
@@ -36,6 +38,14 @@ export function AppHeader({
           >
             Grocery List
             {groceryCount > 0 && <span className="tab-count">{groceryCount}</span>}
+          </button>
+          <button
+            type="button"
+            className={`screen-tab ${screen === "shoppingBag" ? "screen-tab-active" : ""}`}
+            onClick={() => onScreenChange("shoppingBag")}
+          >
+            Shopping Bag
+            {shoppingBagCount > 0 && <span className="tab-count">{shoppingBagCount}</span>}
           </button>
         </nav>
         <button

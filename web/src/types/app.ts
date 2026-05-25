@@ -1,1 +1,1 @@
-export type AppScreen = "fridge" | "grocery";
+export type AppScreen = "fridge" | "grocery" | "shoppingBag";
