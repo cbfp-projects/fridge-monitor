@@ -1,11 +1,12 @@
 # Fridge Monitor
 
-A household web app to track fridge and freezer contents with expiration dates. Inventory lives in [`data/inventory.json`](data/inventory.json); the UI is a React SPA on GitHub Pages.
+A household web app to track fridge and freezer contents with expiration dates. Data lives in [`data/inventory.json`](data/inventory.json) and [`data/grocery.json`](data/grocery.json); the UI is a React SPA on GitHub Pages.
 
 ## Architecture
 
-- **Read:** The app loads `data/inventory.json` via the GitHub Contents API (always current; refetches when you return to the tab). Local dev falls back to mock JSON.
-- **Write:** The app updates the same file via the [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) (~1–3s). The UI updates immediately (optimistic), then syncs in the background.
+- **Read:** Loads both JSON files via the GitHub Contents API (always current; refetches when you return to the tab). Local dev falls back to mock JSON in `web/public/data/`.
+- **Write:** Updates files via the [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) (~1–3s). The UI updates immediately (optimistic), then syncs in the background.
+- **Grocery list:** Tap **Buy** on a fridge item to add it to the grocery list; check items off while shopping, then **Clear checked**.
 - **Deploy:** Pushes to `main` that touch `web/` run [Deploy to GitHub Pages](.github/workflows/deploy.yml).
 
 ## Live site

@@ -4,11 +4,13 @@ import { ExpiryBadge } from "./ExpiryBadge";
 
 interface ItemCardProps {
   item: InventoryItem;
+  onBuy: (item: InventoryItem) => void;
   onEdit: (item: InventoryItem) => void;
   onDelete: (item: InventoryItem) => void;
+  onGroceryList: boolean;
 }
 
-export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
+export function ItemCard({ item, onBuy, onEdit, onDelete, onGroceryList }: ItemCardProps) {
   const qty =
     item.quantity != null
       ? `${item.quantity}${item.unit ? ` ${item.unit}` : ""}`
@@ -34,15 +36,20 @@ export function ItemCard({ item, onEdit, onDelete }: ItemCardProps) {
         {item.notes ? <p className="item-notes">{item.notes}</p> : null}
         <ExpiryBadge expirationDate={item.expirationDate} />
       </div>
-      <div className="item-card-actions">
-        <button type="button" className="btn btn-ghost" onClick={() => onEdit(item)}>
-          Edit
-        </button>
+      <div className="item-actions">
         <button
           type="button"
-          className="btn btn-ghost btn-danger"
-          onClick={() => onDelete(item)}
+          className="btn btn-action btn-buy"
+          onClick={() => onBuy(item)}
+          disabled={onGroceryList}
+          title={onGroceryList ? "Already on grocery list" : "Add to grocery list"}
         >
+          Buy
+        </button>
+        <button type="button" className="btn btn-action" onClick={() => onEdit(item)}>
+          Edit
+        </button>
+        <button type="button" className="btn btn-action btn-action-danger" onClick={() => onDelete(item)}>
           Remove
         </button>
       </div>

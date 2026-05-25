@@ -1,14 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { fetchGrocery, saveGroceryUpdate } from "./api/grocery";
 import {
   canSaveToGitHub,
   createEmptyItem,
   fetchInventory,
   saveInventoryUpdate,
 } from "./api/inventory";
+import { AddItemBar } from "./components/AddItemBar";
+import { AppHeader } from "./components/AppHeader";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
+import { GroceryView } from "./components/GroceryView";
 import { ItemCard } from "./components/ItemCard";
 import { ItemFormModal } from "./components/ItemFormModal";
+import type { AppScreen } from "./types/app";
+import type { GroceryList } from "./types/grocery";
 import type { Inventory, InventoryAction, InventoryItem, LocationFilter } from "./types/inventory";
+import { applyGroceryMutation, groceryItemFromInventory } from "./utils/grocery-mutation";
 import { applyInventoryMutation } from "./utils/inventory-mutation";
 import { formatDateTime } from "./utils/expiry";
 import "./App.css";
@@ -16,7 +23,9 @@ import "./App.css";
 type FormMode = "add" | "edit" | null;
 
 export default function App() {
+  const [screen, setScreen] = useState<AppScreen>("fridge");
   const [inventory, setInventory] = useState<Inventory | null>(null);
+  const [grocery, setGrocery] = useState<GroceryList | null>(null);
   const [filter, setFilter] = useState<LocationFilter>("all");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -46,11 +55,12 @@ export default function App() {
     }
     if (!background) setError(null);
     try {
-      const data = await fetchInventory();
-      setInventory(data);
+      const [inv, gro] = await Promise.all([fetchInventory(), fetchGrocery()]);
+      setInventory(inv);
+      setGrocery(gro);
       setSyncError(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to load inventory";
+      const message = err instanceof Error ? err.message : "Failed to load data";
       if (background) {
         setSyncError(message);
       } else {
@@ -63,6 +73,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- mount fetch
     void load();
   }, [load]);
 
@@ -81,6 +92,14 @@ export default function App() {
     };
   }, [load]);
 
+  const grocerySourceIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const g of grocery?.items ?? []) {
+      if (g.sourceItemId) ids.add(g.sourceItemId);
+    }
+    return ids;
+  }, [grocery]);
+
   const filteredItems = useMemo(() => {
     if (!inventory) return [];
     const items =
@@ -89,6 +108,27 @@ export default function App() {
         : inventory.items.filter((i) => i.location === filter);
     return [...items].sort((a, b) => a.expirationDate.localeCompare(b.expirationDate));
   }, [inventory, filter]);
+
+  const counts = useMemo(() => {
+    const items = inventory?.items ?? [];
+    return {
+      all: items.length,
+      fridge: items.filter((i) => i.location === "fridge").length,
+      freezer: items.filter((i) => i.location === "freezer").length,
+    };
+  }, [inventory]);
+
+  const subtitle = useMemo(() => {
+    if (syncing) return "Saving…";
+    if (screen === "grocery" && grocery) {
+      const n = grocery.items.filter((i) => !i.checked).length;
+      return `Updated ${formatDateTime(grocery.updatedAt)} · ${n} to buy`;
+    }
+    if (inventory) {
+      return `Updated ${formatDateTime(inventory.updatedAt)}`;
+    }
+    return null;
+  }, [screen, inventory, grocery, syncing]);
 
   function openAdd() {
     setSaveError(null);
@@ -106,6 +146,55 @@ export default function App() {
     setFormMode(null);
     setEditingItem(null);
     setSaveError(null);
+  }
+
+  async function persistGrocery(
+    action: Parameters<typeof applyGroceryMutation>[1],
+    payload: Parameters<typeof applyGroceryMutation>[2],
+    optimistic: (prev: GroceryList) => GroceryList,
+  ) {
+    if (!grocery) return;
+
+    const snapshot = grocery;
+    let next: GroceryList;
+    try {
+      next = optimistic(snapshot);
+    } catch (err) {
+      setSyncError(err instanceof Error ? err.message : "Update failed");
+      return;
+    }
+
+    setGrocery(next);
+    setSyncError(null);
+    setSyncing(true);
+
+    try {
+      const saved = await saveGroceryUpdate({ action, payload });
+      setGrocery(saved);
+    } catch (err) {
+      setGrocery(snapshot);
+      setSyncError(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
+  async function handleBuy(item: InventoryItem) {
+    if (grocerySourceIds.has(item.id)) return;
+    const entry = groceryItemFromInventory(item);
+    await persistGrocery("add", entry, (prev) => applyGroceryMutation(prev, "add", entry));
+  }
+
+  function handleGroceryToggle(item: { id: string }) {
+    void persistGrocery("toggle", { id: item.id }, (prev) =>
+      applyGroceryMutation(prev, "toggle", { id: item.id }),
+    );
+  }
+
+  function handleGroceryClearChecked() {
+    void persistGrocery("clearChecked", { id: "" }, (prev) =>
+      applyGroceryMutation(prev, "clearChecked", { id: "" }),
+    );
   }
 
   async function handleSave(
@@ -160,41 +249,18 @@ export default function App() {
     await handleSave(secret, "delete", item);
   }
 
-  const counts = useMemo(() => {
-    const items = inventory?.items ?? [];
-    return {
-      all: items.length,
-      fridge: items.filter((i) => i.location === "fridge").length,
-      freezer: items.filter((i) => i.location === "freezer").length,
-    };
-  }, [inventory]);
+  const showFridgeFooter = screen === "fridge" && !loading && !error;
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <div>
-          <h1>Fridge Monitor</h1>
-          {inventory && (
-            <p className="subtitle">
-              Updated {formatDateTime(inventory.updatedAt)}
-              {syncing ? " · Saving…" : null}
-            </p>
-          )}
-        </div>
-        <div className="header-actions">
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={() => load({ background: true })}
-            disabled={refreshing || syncing}
-          >
-            {refreshing ? "Refreshing…" : "Refresh"}
-          </button>
-          <button type="button" className="btn btn-primary" onClick={openAdd}>
-            + Add
-          </button>
-        </div>
-      </header>
+    <div className={`app ${showFridgeFooter ? "app-with-footer" : ""}`}>
+      <AppHeader
+        screen={screen}
+        onScreenChange={setScreen}
+        subtitle={subtitle}
+        refreshing={refreshing}
+        onRefresh={() => load({ background: true })}
+        groceryCount={grocery?.items.filter((i) => !i.checked).length ?? 0}
+      />
 
       {syncError && (
         <p className="status-banner status-error" role="alert">
@@ -202,47 +268,66 @@ export default function App() {
         </p>
       )}
 
-      <nav className="tabs" aria-label="Filter by location">
-        {(["all", "fridge", "freezer"] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            className={`tab ${filter === tab ? "tab-active" : ""}`}
-            onClick={() => setFilter(tab)}
-          >
-            {tab === "all" ? "All" : tab.charAt(0).toUpperCase() + tab.slice(1)}
-            <span className="tab-count">{counts[tab]}</span>
-          </button>
-        ))}
-      </nav>
+      {screen === "fridge" && (
+        <>
+          <nav className="tabs location-tabs" aria-label="Filter by location">
+            {(["all", "fridge", "freezer"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                className={`tab ${filter === tab ? "tab-active" : ""}`}
+                onClick={() => setFilter(tab)}
+              >
+                {tab === "all" ? "All" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                <span className="tab-count">{counts[tab]}</span>
+              </button>
+            ))}
+          </nav>
 
-      <main className="main">
-        {loading && <p className="state-message">Loading inventory…</p>}
-        {error && (
-          <p className="state-message state-error" role="alert">
-            {error}
-          </p>
-        )}
-        {!loading && !error && filteredItems.length === 0 && (
-          <p className="state-message state-empty">
-            No items{filter !== "all" ? ` in the ${filter}` : ""}. Tap Add to track something.
-          </p>
-        )}
-        <ul className="item-list">
-          {filteredItems.map((item) => (
-            <li key={item.id}>
-              <ItemCard
-                item={item}
-                onEdit={openEdit}
-                onDelete={(i) => {
-                  setSaveError(null);
-                  setDeletingItem(i);
-                }}
-              />
-            </li>
-          ))}
-        </ul>
-      </main>
+          <main className="main main-scroll">
+            {loading && <p className="state-message">Loading inventory…</p>}
+            {error && (
+              <p className="state-message state-error" role="alert">
+                {error}
+              </p>
+            )}
+            {!loading && !error && filteredItems.length === 0 && (
+              <p className="state-message state-empty">
+                No items{filter !== "all" ? ` in the ${filter}` : ""}. Tap Add below to track something.
+              </p>
+            )}
+            <ul className="item-list">
+              {filteredItems.map((item) => (
+                <li key={item.id}>
+                  <ItemCard
+                    item={item}
+                    onBuy={handleBuy}
+                    onEdit={openEdit}
+                    onDelete={(i) => {
+                      setSaveError(null);
+                      setDeletingItem(i);
+                    }}
+                    onGroceryList={grocerySourceIds.has(item.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </main>
+
+          {showFridgeFooter && <AddItemBar onAdd={openAdd} />}
+        </>
+      )}
+
+      {screen === "grocery" && (
+        <main className="main main-scroll">
+          <GroceryView
+            grocery={grocery}
+            loading={loading}
+            onToggle={handleGroceryToggle}
+            onClearChecked={handleGroceryClearChecked}
+          />
+        </main>
+      )}
 
       <ItemFormModal
         key={formMode === "add" ? "add" : (editingItem?.id ?? "edit")}
