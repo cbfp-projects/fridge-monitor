@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:51:01.695Z",
+  "updatedAt": "2026-05-25T02:52:11.741Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -41,9 +41,25 @@
       "unit": "Dozen",
       "notes": "",
       "addedAt": "2026-05-25T02:50:44.679Z"
+    },
+    {
+      "id": "e842c5fe-8e78-4e53-86a8-b5bf0fe60752",
+      "name": "Greek Yogurt",
+      "location": "fridge",
+      "expirationDate": "2026-06-24",
+      "quantity": 5,
+      "unit": "",
+      "notes": "",
+      "addedAt": "2026-05-25T02:51:18.407Z"
     }
   ],
   "nameHistory": [
+    {
+      "name": "Greek Yogurt",
+      "location": "fridge",
+      "quantity": 5,
+      "lastUsedAt": "2026-05-25T02:52:11.741Z"
+    },
     {
       "name": "Eggs",
       "location": "fridge",
