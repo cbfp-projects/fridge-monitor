@@ -8,9 +8,13 @@ A household web app to track fridge and freezer contents with expiration dates. 
 - **Write:** The app triggers the [Update inventory](.github/workflows/update-inventory.yml) workflow with a household password. The workflow validates the password, updates the JSON, and commits.
 - **Deploy:** Pushes to `main` that touch `web/` run [Deploy to GitHub Pages](.github/workflows/deploy.yml).
 
+## Live site
+
+**https://cbfp-projects.github.io/fridge-monitor/**
+
 ## One-time setup
 
-1. **Create a GitHub repository** (private recommended) and push this project to `main`.
+1. Repository: **https://github.com/cbfp-projects/fridge-monitor** (public; GitHub Pages enabled with Actions).
 
 2. **Repository secrets** (Settings → Secrets and variables → Actions):
    | Secret | Description |
@@ -20,9 +24,9 @@ A household web app to track fridge and freezer contents with expiration dates. 
 
 3. **Enable GitHub Pages:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 
-4. **Push to `main`** and confirm the Deploy workflow succeeds. Your app URL will be like `https://<user>.github.io/<repo>/`.
+4. **Push to `main`** (or run the Deploy workflow) and confirm the Deploy workflow succeeds.
 
-5. Open the site, enter the household password when adding items, and verify the Update inventory workflow runs and commits.
+5. Open the live site, enter the household password when adding items, and verify the Update inventory workflow runs and commits.
 
 ## Local development
 
@@ -45,9 +49,10 @@ VITE_DISPATCH_TOKEN=ghp_...
 
 ## Security notes
 
-- The dispatch token is embedded in the built JavaScript bundle. Use a **private** repo and a **fine-grained** PAT limited to Actions on this repository.
-- The household secret is validated inside the workflow; knowing only the dispatch token is not enough to change inventory.
-- Rotate the PAT if the bundle might have been exposed.
+- The repo is **public**: anyone can read `data/inventory.json` and the source code.
+- The dispatch token is embedded in the built JavaScript bundle. Use a **fine-grained** PAT limited to Actions on this repository and rotate it if exposed.
+- `HOUSEHOLD_SECRET` stays in GitHub Actions secrets only; the workflow rejects writes without it.
+- Choose a strong household password; the dispatch token alone cannot change inventory.
 
 ## Manual workflow test
 
