@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:46:39.148Z",
+  "updatedAt": "2026-05-25T02:46:54.406Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -31,16 +31,6 @@
       "unit": "Pieces",
       "notes": "",
       "addedAt": "2026-05-25T02:39:32.074Z"
-    },
-    {
-      "id": "47ca887d-d094-42d4-af13-f733a9996003",
-      "name": "Spindrift",
-      "location": "fridge",
-      "expirationDate": "2026-05-25",
-      "quantity": 1,
-      "unit": "Pack",
-      "notes": "",
-      "addedAt": "2026-05-25T02:46:11.564Z"
     }
   ],
   "nameHistory": [
@@ -49,7 +39,7 @@
       "location": "fridge",
       "quantity": 1,
       "unit": "Pack",
-      "lastUsedAt": "2026-05-25T02:46:39.148Z"
+      "lastUsedAt": "2026-05-25T02:46:54.406Z"
     },
     {
       "name": "Pacific cod",
