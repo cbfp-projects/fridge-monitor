@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T01:51:20.958Z",
+  "updatedAt": "2026-05-25T02:05:34.010Z",
   "items": [
     {
       "id": "6e5a2e50-83b4-4773-b5b0-6840b1432633",
@@ -8,7 +8,7 @@
       "sourceItemId": "550e8400-e29b-41d4-a716-446655440000",
       "quantity": 1,
       "unit": "gal",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-05-25T01:51:20.425Z"
     }
   ]
