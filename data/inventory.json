@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:52:11.741Z",
+  "updatedAt": "2026-05-25T02:54:26.193Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -51,9 +51,26 @@
       "unit": "",
       "notes": "",
       "addedAt": "2026-05-25T02:51:18.407Z"
+    },
+    {
+      "id": "9c3e3db4-afc2-4a0b-9c61-745b7ce24e69",
+      "name": "Chocolate Pudding",
+      "location": "fridge",
+      "expirationDate": "2026-07-30",
+      "quantity": 2,
+      "unit": "Packs",
+      "notes": "",
+      "addedAt": "2026-05-25T02:53:55.944Z"
     }
   ],
   "nameHistory": [
+    {
+      "name": "Chocolate Pudding",
+      "location": "fridge",
+      "quantity": 2,
+      "unit": "Packs",
+      "lastUsedAt": "2026-05-25T02:54:26.193Z"
+    },
     {
       "name": "Greek Yogurt",
       "location": "fridge",
