@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:40:31.052Z",
+  "updatedAt": "2026-05-25T02:40:38.494Z",
   "items": [
     {
       "id": "71ece401-ba79-4b8a-9073-5fcace3f1746",
@@ -8,7 +8,7 @@
       "sourceItemId": "655c625d-9f99-48dc-9ac4-2e257fe8f9d5",
       "quantity": 2,
       "unit": "Pieces",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-05-25T02:40:30.619Z"
     }
   ]
