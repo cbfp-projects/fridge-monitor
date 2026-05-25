@@ -37,7 +37,7 @@ Without `VITE_REPO_*` set, the app loads mock data from `web/public/data/invento
 To test saves against GitHub locally, copy `.env.example` to `.env.local`:
 
 ```bash
-VITE_REPO_OWNER=your-username
+VITE_REPO_OWNER=cbfp-projects
 VITE_REPO_NAME=fridge-monitor
 VITE_DEFAULT_BRANCH=main
 VITE_DISPATCH_TOKEN=ghp_...
