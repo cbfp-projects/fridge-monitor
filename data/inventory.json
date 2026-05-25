@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T00:32:21.680Z",
+  "updatedAt": "2026-05-25T00:32:37.505Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -21,13 +21,6 @@
       "unit": "bag",
       "notes": "",
       "addedAt": "2026-05-20T08:00:00Z"
-    },
-    {
-      "id": "aaaaaaaa-bbbb-4ccc-dddd-eeeeeeeeeeee",
-      "name": "Setup test",
-      "location": "fridge",
-      "expirationDate": "2026-06-01",
-      "addedAt": "2026-05-25T00:00:00Z"
     }
   ]
 }
