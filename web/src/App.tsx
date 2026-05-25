@@ -14,6 +14,7 @@ import { GroceryItemFormModal } from "./components/GroceryItemFormModal";
 import { GroceryView } from "./components/GroceryView";
 import { ItemCard } from "./components/ItemCard";
 import { ItemFormModal } from "./components/ItemFormModal";
+import { ShoppingBagView } from "./components/ShoppingBagView";
 import type { AppScreen } from "./types/app";
 import type { GroceryItem, GroceryList } from "./types/grocery";
 import type { Inventory, InventoryAction, InventoryItem, LocationFilter } from "./types/inventory";
@@ -41,6 +42,7 @@ export default function App() {
   const [groceryFormOpen, setGroceryFormOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [bagPlacementItem, setBagPlacementItem] = useState<GroceryItem | null>(null);
 
   const canSave = canSaveToGitHub();
   const syncingRef = useRef(false);
@@ -101,6 +103,9 @@ export default function App() {
     for (const g of grocery?.items ?? []) {
       if (g.sourceItemId) ids.add(g.sourceItemId);
     }
+    for (const g of grocery?.shoppingBag ?? []) {
+      if (g.sourceItemId) ids.add(g.sourceItemId);
+    }
     return ids;
   }, [grocery]);
 
@@ -128,6 +133,9 @@ export default function App() {
       const n = grocery.items.filter((i) => !i.checked).length;
       return `Updated ${formatDateTime(grocery.updatedAt)} · ${n} to buy`;
     }
+    if (screen === "shoppingBag" && grocery) {
+      return `Updated ${formatDateTime(grocery.updatedAt)} · ${(grocery.shoppingBag ?? []).length} in bag`;
+    }
     if (inventory) {
       return `Updated ${formatDateTime(inventory.updatedAt)}`;
     }
@@ -136,6 +144,7 @@ export default function App() {
 
   function openAddInventory() {
     setSaveError(null);
+    setBagPlacementItem(null);
     setEditingItem(createEmptyItem(filter === "freezer" ? "freezer" : "fridge"));
     setFormMode("add");
   }
@@ -147,13 +156,17 @@ export default function App() {
 
   function openEdit(item: InventoryItem) {
     setSaveError(null);
+    setBagPlacementItem(null);
     setEditingItem({ ...item });
     setFormMode("edit");
   }
 
-  function closeForm() {
+  function closeForm(options?: { clearBagPlacement?: boolean }) {
     setFormMode(null);
     setEditingItem(null);
+    if (options?.clearBagPlacement ?? true) {
+      setBagPlacementItem(null);
+    }
     setSaveError(null);
   }
 
@@ -221,6 +234,31 @@ export default function App() {
     );
   }
 
+  function handleGroceryCheckInBag() {
+    void persistGrocery("checkInBag", { id: "" }, (prev) =>
+      applyGroceryMutation(prev, "checkInBag", { id: "" }),
+    );
+  }
+
+  function handleBagClear(item: GroceryItem) {
+    void persistGrocery("removeBagItem", { id: item.id }, (prev) =>
+      applyGroceryMutation(prev, "removeBagItem", { id: item.id }),
+    );
+  }
+
+  function handleBagPutAway(item: GroceryItem, location: "fridge" | "freezer") {
+    setSaveError(null);
+    setBagPlacementItem(item);
+    setEditingItem({
+      ...createEmptyItem(location),
+      name: item.name,
+      location,
+      quantity: item.quantity,
+      unit: item.unit ?? "",
+    });
+    setFormMode("add");
+  }
+
   async function handleSave(
     secret: string,
     action: InventoryAction,
@@ -243,7 +281,7 @@ export default function App() {
     }
 
     setInventory(optimistic);
-    closeForm();
+    closeForm({ clearBagPlacement: false });
     setDeletingItem(null);
     setSaving(false);
     setSyncing(true);
@@ -251,6 +289,12 @@ export default function App() {
     try {
       const saved = await saveInventoryUpdate({ secret, action, payload: item });
       setInventory(saved);
+      if (action === "add" && bagPlacementItem) {
+        await persistGrocery("removeBagItem", { id: bagPlacementItem.id }, (prev) =>
+          applyGroceryMutation(prev, "removeBagItem", { id: bagPlacementItem.id }),
+        );
+        setBagPlacementItem(null);
+      }
     } catch (err) {
       setInventory(snapshot);
       const message = err instanceof Error ? err.message : "Save failed";
@@ -286,6 +330,7 @@ export default function App() {
         refreshing={refreshing}
         onRefresh={() => load({ background: true })}
         groceryCount={grocery?.items.filter((i) => !i.checked).length ?? 0}
+        shoppingBagCount={(grocery?.shoppingBag ?? []).length}
       />
 
       {syncError && (
@@ -376,6 +421,18 @@ export default function App() {
             loading={loading}
             onToggle={handleGroceryToggle}
             onClearChecked={handleGroceryClearChecked}
+            onCheckInBag={handleGroceryCheckInBag}
+          />
+        </main>
+      )}
+
+      {screen === "shoppingBag" && (
+        <main className="main main-scroll">
+          <ShoppingBagView
+            grocery={grocery}
+            loading={loading}
+            onClear={handleBagClear}
+            onPutAway={handleBagPutAway}
           />
         </main>
       )}

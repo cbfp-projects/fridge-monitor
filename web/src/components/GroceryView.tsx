@@ -6,9 +6,16 @@ interface GroceryViewProps {
   loading: boolean;
   onToggle: (item: GroceryItem) => void;
   onClearChecked: () => void;
+  onCheckInBag: () => void;
 }
 
-export function GroceryView({ grocery, loading, onToggle, onClearChecked }: GroceryViewProps) {
+export function GroceryView({
+  grocery,
+  loading,
+  onToggle,
+  onClearChecked,
+  onCheckInBag,
+}: GroceryViewProps) {
   const items = grocery?.items ?? [];
   const checkedCount = items.filter((i) => i.checked).length;
   const unchecked = items.filter((i) => !i.checked);
@@ -50,9 +57,14 @@ export function GroceryView({ grocery, loading, onToggle, onClearChecked }: Groc
         </>
       )}
       {checkedCount > 0 && (
-        <button type="button" className="btn btn-secondary btn-clear-checked" onClick={onClearChecked}>
-          Clear checked ({checkedCount})
-        </button>
+        <div className="grocery-actions">
+          <button type="button" className="btn btn-secondary" onClick={onCheckInBag}>
+            Check in bag ({checkedCount})
+          </button>
+          <button type="button" className="btn btn-secondary btn-clear-checked" onClick={onClearChecked}>
+            Clear checked ({checkedCount})
+          </button>
+        </div>
       )}
     </div>
   );
