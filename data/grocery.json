@@ -1,15 +1,5 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T01:23:12.533Z",
-  "items": [
-    {
-      "id": "073e025c-3f59-4f4f-a02e-5ed70af36efc",
-      "name": "Whole milk",
-      "sourceItemId": "550e8400-e29b-41d4-a716-446655440000",
-      "quantity": 1,
-      "unit": "gal",
-      "checked": true,
-      "addedAt": "2026-05-25T01:22:55.066Z"
-    }
-  ]
+  "updatedAt": "2026-05-25T01:23:13.471Z",
+  "items": []
 }
