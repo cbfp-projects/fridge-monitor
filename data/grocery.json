@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:14:59.781Z",
+  "updatedAt": "2026-05-25T21:15:00.946Z",
   "items": [
     {
       "id": "65b0d041-1399-42a8-878e-68074d01481d",
@@ -29,7 +29,7 @@
       "name": "Yuzu",
       "quantity": 1,
       "unit": "Pack",
-      "checked": true,
+      "checked": false,
       "addedAt": "2026-05-25T20:26:22.432Z"
     }
   ]
