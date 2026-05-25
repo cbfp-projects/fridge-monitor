@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T01:05:15.054Z",
+  "updatedAt": "2026-05-25T02:40:18.407Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -21,7 +21,25 @@
       "unit": "bag",
       "notes": "",
       "addedAt": "2026-05-20T08:00:00Z"
+    },
+    {
+      "id": "655c625d-9f99-48dc-9ac4-2e257fe8f9d5",
+      "name": "Pacific cod",
+      "location": "fridge",
+      "expirationDate": "2026-05-29",
+      "quantity": 2,
+      "unit": "Pieces",
+      "notes": "",
+      "addedAt": "2026-05-25T02:39:32.074Z"
     }
   ],
-  "nameHistory": []
+  "nameHistory": [
+    {
+      "name": "Pacific cod",
+      "location": "fridge",
+      "quantity": 2,
+      "unit": "Pieces",
+      "lastUsedAt": "2026-05-25T02:40:18.407Z"
+    }
+  ]
 }
