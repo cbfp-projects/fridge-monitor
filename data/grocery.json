@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:37:22.519Z",
+  "updatedAt": "2026-05-25T21:38:22.218Z",
   "shoppingBag": [],
   "items": [
     {
@@ -29,6 +29,12 @@
       "name": "Canola oil",
       "checked": false,
       "addedAt": "2026-05-25T21:28:48.192Z"
+    },
+    {
+      "id": "ad22ff49-ff0b-4513-8fbd-c0b77e5a3e9f",
+      "name": "Test",
+      "checked": false,
+      "addedAt": "2026-05-25T21:38:21.651Z"
     }
   ],
   "history": []
