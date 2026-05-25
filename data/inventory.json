@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:54:26.193Z",
+  "updatedAt": "2026-05-25T02:54:42.884Z",
   "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -61,9 +61,26 @@
       "unit": "Packs",
       "notes": "",
       "addedAt": "2026-05-25T02:53:55.944Z"
+    },
+    {
+      "id": "197c6bd2-adbf-4583-babb-e190deecde8f",
+      "name": "Rice Pudding",
+      "location": "fridge",
+      "expirationDate": "2026-07-31",
+      "quantity": 2,
+      "unit": "Packs",
+      "notes": "",
+      "addedAt": "2026-05-25T02:54:27.781Z"
     }
   ],
   "nameHistory": [
+    {
+      "name": "Rice Pudding",
+      "location": "fridge",
+      "quantity": 2,
+      "unit": "Packs",
+      "lastUsedAt": "2026-05-25T02:54:42.884Z"
+    },
     {
       "name": "Chocolate Pudding",
       "location": "fridge",
