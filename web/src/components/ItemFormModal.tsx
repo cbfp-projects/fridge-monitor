@@ -148,7 +148,7 @@ export function ItemFormModal({
 
           {!canSave && (
             <p className="form-hint">
-              Saving requires GitHub repo and dispatch token configuration (see README).
+              Saving requires GitHub repo, contents token, and household password in the build (see README).
             </p>
           )}
 

@@ -1,11 +1,11 @@
 # Fridge Monitor
 
-A household web app to track fridge and freezer contents with expiration dates. Inventory lives in [`data/inventory.json`](data/inventory.json); the UI is a React SPA on GitHub Pages; updates run through GitHub Actions.
+A household web app to track fridge and freezer contents with expiration dates. Inventory lives in [`data/inventory.json`](data/inventory.json); the UI is a React SPA on GitHub Pages.
 
 ## Architecture
 
 - **Read:** The app fetches `data/inventory.json` from raw GitHub (or local mock JSON in dev).
-- **Write:** The app triggers the [Update inventory](.github/workflows/update-inventory.yml) workflow with a household password. The workflow validates the password, updates the JSON, and commits.
+- **Write:** The app updates the same file via the [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) (~1–3s). The UI updates immediately (optimistic), then syncs in the background.
 - **Deploy:** Pushes to `main` that touch `web/` run [Deploy to GitHub Pages](.github/workflows/deploy.yml).
 
 ## Live site
@@ -17,16 +17,17 @@ A household web app to track fridge and freezer contents with expiration dates. 
 1. Repository: **https://github.com/cbfp-projects/fridge-monitor** (public; GitHub Pages enabled with Actions).
 
 2. **Repository secrets** (Settings → Secrets and variables → Actions):
+
    | Secret | Description |
    |--------|-------------|
-   | `HOUSEHOLD_SECRET` | Shared password your household uses in the app |
-   | `WORKFLOW_DISPATCH_TOKEN` | Fine-grained PAT scoped to this repo with **Actions: Read and write** |
+   | `HOUSEHOLD_SECRET` | Household password (checked in the app before save) |
+   | `CONTENTS_WRITE_TOKEN` | Fine-grained PAT for this repo with **Contents: Read and write** |
 
 3. **Enable GitHub Pages:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 
-4. **Push to `main`** (or run the Deploy workflow) and confirm the Deploy workflow succeeds.
+4. Push to `main` or run the Deploy workflow so the live bundle includes the secrets above.
 
-5. Open the live site, enter the household password when adding items, and verify the Update inventory workflow runs and commits.
+5. Open the live site, enter the household password when adding items, and confirm saves complete (subtitle shows “Saving…” briefly).
 
 ## Local development
 
@@ -44,20 +45,16 @@ To test saves against GitHub locally, copy `.env.example` to `.env.local`:
 VITE_REPO_OWNER=cbfp-projects
 VITE_REPO_NAME=fridge-monitor
 VITE_DEFAULT_BRANCH=main
-VITE_DISPATCH_TOKEN=ghp_...
+VITE_CONTENTS_TOKEN=ghp_...
+VITE_HOUSEHOLD_SECRET=1985
 ```
 
 ## Security notes
 
 - The repo is **public**: anyone can read `data/inventory.json` and the source code.
-- The dispatch token is embedded in the built JavaScript bundle. Use a **fine-grained** PAT limited to Actions on this repository and rotate it if exposed.
-- `HOUSEHOLD_SECRET` stays in GitHub Actions secrets only; the workflow rejects writes without it.
-- Choose a strong household password; the dispatch token alone cannot change inventory.
+- The built app embeds `VITE_CONTENTS_TOKEN` and `VITE_HOUSEHOLD_SECRET` for client-side saves. Use a **fine-grained** PAT limited to **Contents** on this repository only, and rotate it if the bundle is exposed.
+- The household password is a light guard for casual use, not strong authentication.
 
-## Manual workflow test
+## Optional: manual workflow
 
-In GitHub → Actions → **Update inventory** → Run workflow:
-
-- **secret:** your `HOUSEHOLD_SECRET`
-- **action:** `add`
-- **payload:** `{"id":"<uuid>","name":"Test","location":"fridge","expirationDate":"2026-06-01","addedAt":"2026-05-24T12:00:00Z"}`
+[Update inventory](.github/workflows/update-inventory.yml) remains available for manual edits via Actions (backup path; the app no longer uses it).

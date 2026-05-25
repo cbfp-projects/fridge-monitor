@@ -40,7 +40,8 @@ jobs:
           VITE_REPO_NAME: ${{ github.event.repository.name }}
           VITE_DEFAULT_BRANCH: main
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
-          VITE_DISPATCH_TOKEN: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
+          VITE_CONTENTS_TOKEN: ${{ secrets.CONTENTS_WRITE_TOKEN }}
+          VITE_HOUSEHOLD_SECRET: ${{ secrets.HOUSEHOLD_SECRET }}
         run: npm run build
 
       - name: Upload Pages artifact

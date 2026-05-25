@@ -284,10 +284,19 @@ body {
   font-size: 0.9rem;
 }
 
+.status-banner.status-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 @media (prefers-color-scheme: dark) {
   .status-banner {
     background: #1e3a5f;
     color: #93c5fd;
+  }
+  .status-banner.status-error {
+    background: #7f1d1d;
+    color: #fecaca;
   }
 }
 

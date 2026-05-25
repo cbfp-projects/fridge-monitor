@@ -1,3 +1,4 @@
+# Optional backup path for manual inventory edits. The web app writes via the GitHub Contents API.
 name: Update inventory
 
 on:

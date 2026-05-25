@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   canSaveToGitHub,
   createEmptyItem,
-  dispatchInventoryUpdate,
   fetchInventory,
-  waitForLatestWorkflowRun,
+  saveInventoryUpdate,
 } from "./api/inventory";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
 import { ItemCard } from "./components/ItemCard";
 import { ItemFormModal } from "./components/ItemFormModal";
 import type { Inventory, InventoryAction, InventoryItem, LocationFilter } from "./types/inventory";
+import { applyInventoryMutation } from "./utils/inventory-mutation";
 import { formatDateTime } from "./utils/expiry";
 import "./App.css";
 
@@ -20,13 +20,14 @@ export default function App() {
   const [filter, setFilter] = useState<LocationFilter>("all");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [formMode, setFormMode] = useState<FormMode>(null);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   const canSave = canSaveToGitHub();
 
@@ -37,6 +38,7 @@ export default function App() {
     try {
       const data = await fetchInventory();
       setInventory(data);
+      setSyncError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load inventory");
     } finally {
@@ -82,33 +84,46 @@ export default function App() {
     action: InventoryAction,
     item: InventoryItem,
   ) {
+    if (!inventory) return;
+
     setSaving(true);
     setSaveError(null);
-    setStatusMessage("Sending update…");
+    setSyncError(null);
+
+    const snapshot = inventory;
+    let optimistic: Inventory;
     try {
-      await dispatchInventoryUpdate({ secret, action, payload: item });
-      setStatusMessage("Waiting for GitHub Actions…");
-      const result = await waitForLatestWorkflowRun();
-      if (result === "success") {
-        setStatusMessage(null);
-        closeForm();
-        setDeletingItem(null);
-        await load(true);
-      } else if (result === "failure") {
-        setSaveError("Workflow failed. Check the password or Actions logs.");
-        setStatusMessage(null);
-      } else {
-        setStatusMessage("Update may still be running. Refreshing…");
-        closeForm();
-        setDeletingItem(null);
-        await load(true);
-        setStatusMessage(null);
-      }
+      optimistic = applyInventoryMutation(snapshot, action, item);
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : "Save failed");
-      setStatusMessage(null);
-    } finally {
+      setSaveError(err instanceof Error ? err.message : "Invalid item");
       setSaving(false);
+      return;
+    }
+
+    setInventory(optimistic);
+    closeForm();
+    setDeletingItem(null);
+    setSaving(false);
+    setSyncing(true);
+
+    try {
+      const saved = await saveInventoryUpdate({ secret, action, payload: item });
+      setInventory(saved);
+    } catch (err) {
+      setInventory(snapshot);
+      const message = err instanceof Error ? err.message : "Save failed";
+      setSyncError(message);
+      if (message.toLowerCase().includes("password")) {
+        setSaveError(message);
+        if (action !== "delete") {
+          setEditingItem(item);
+          setFormMode(action === "add" ? "add" : "edit");
+        } else {
+          setDeletingItem(item);
+        }
+      }
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -131,7 +146,10 @@ export default function App() {
         <div>
           <h1>Fridge Monitor</h1>
           {inventory && (
-            <p className="subtitle">Updated {formatDateTime(inventory.updatedAt)}</p>
+            <p className="subtitle">
+              Updated {formatDateTime(inventory.updatedAt)}
+              {syncing ? " · Saving…" : null}
+            </p>
           )}
         </div>
         <div className="header-actions">
@@ -139,7 +157,7 @@ export default function App() {
             type="button"
             className="btn btn-ghost"
             onClick={() => load(true)}
-            disabled={refreshing}
+            disabled={refreshing || syncing}
           >
             {refreshing ? "Refreshing…" : "Refresh"}
           </button>
@@ -149,7 +167,11 @@ export default function App() {
         </div>
       </header>
 
-      {statusMessage && <p className="status-banner">{statusMessage}</p>}
+      {syncError && (
+        <p className="status-banner status-error" role="alert">
+          {syncError}
+        </p>
+      )}
 
       <nav className="tabs" aria-label="Filter by location">
         {(["all", "fridge", "freezer"] as const).map((tab) => (
