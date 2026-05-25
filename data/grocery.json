@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T21:15:03.809Z",
+  "updatedAt": "2026-05-25T21:15:06.742Z",
   "items": [
     {
       "id": "65b0d041-1399-42a8-878e-68074d01481d",
@@ -8,7 +8,7 @@
       "sourceItemId": "47ca887d-d094-42d4-af13-f733a9996003",
       "quantity": 1,
       "unit": "Pack",
-      "checked": true,
+      "checked": false,
       "addedAt": "2026-05-25T02:46:49.996Z"
     },
     {
