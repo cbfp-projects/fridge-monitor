@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-25T02:46:50.511Z",
+  "updatedAt": "2026-05-25T18:46:06.323Z",
   "items": [
     {
       "id": "65b0d041-1399-42a8-878e-68074d01481d",
@@ -10,6 +10,13 @@
       "unit": "Pack",
       "checked": false,
       "addedAt": "2026-05-25T02:46:49.996Z"
+    },
+    {
+      "id": "eeba1a12-2359-40ab-b5ae-d19b05899dc2",
+      "name": "Bananas",
+      "quantity": 5,
+      "checked": false,
+      "addedAt": "2026-05-25T18:46:05.704Z"
     }
   ]
 }
