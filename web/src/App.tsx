@@ -8,7 +8,6 @@ import {
 } from "./api/inventory";
 import { AddItemBar } from "./components/AddItemBar";
 import { AppHeader } from "./components/AppHeader";
-import { FridgeIcon } from "./components/FridgeIcon";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
 import { GroceryItemFormModal } from "./components/GroceryItemFormModal";
 import { GroceryView } from "./components/GroceryView";
@@ -30,7 +29,7 @@ export default function App() {
   const [screen, setScreen] = useState<AppScreen>("fridge");
   const [inventory, setInventory] = useState<Inventory | null>(null);
   const [grocery, setGrocery] = useState<GroceryList | null>(null);
-  const [filter, setFilter] = useState<LocationFilter>("all");
+  const [filter, setFilter] = useState<LocationFilter>("fridge");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [syncing, setSyncing] = useState(false);
@@ -111,17 +110,13 @@ export default function App() {
 
   const filteredItems = useMemo(() => {
     if (!inventory) return [];
-    const items =
-      filter === "all"
-        ? inventory.items
-        : inventory.items.filter((i) => i.location === filter);
+    const items = inventory.items.filter((i) => i.location === filter);
     return [...items].sort((a, b) => a.expirationDate.localeCompare(b.expirationDate));
   }, [inventory, filter]);
 
   const counts = useMemo(() => {
     const items = inventory?.items ?? [];
     return {
-      all: items.length,
       fridge: items.filter((i) => i.location === "fridge").length,
       freezer: items.filter((i) => i.location === "freezer").length,
     };
@@ -353,33 +348,19 @@ export default function App() {
           aria-label={
             filter === "freezer"
               ? "Freezer compartment"
-              : filter === "fridge"
-                ? "Refrigerator compartment"
-                : "Refrigerator interior"
+              : "Refrigerator compartment"
           }
         >
-          <div className="fridge-door-gasket" aria-hidden="true" />
-          <div className="fridge-led-bar" aria-hidden="true" />
           <nav className="tabs location-tabs" aria-label="Filter by location">
-            {(["all", "fridge", "freezer"] as const).map((tab) => (
+            {(["fridge", "freezer"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`tab tab-${tab} ${filter === tab ? "tab-active" : ""}${tab !== "all" ? " tab--icon-only" : ""}`}
+                className={`tab tab-${tab} ${filter === tab ? "tab-active" : ""}`}
                 onClick={() => setFilter(tab)}
-                aria-label={tab === "fridge" ? "Fridge" : tab === "freezer" ? "Freezer" : undefined}
+                aria-label={tab === "fridge" ? "Fridge" : "Freezer"}
               >
-                {tab === "freezer" && (
-                  <span className="tab-icon tab-icon--glyph" aria-hidden>
-                    ❄
-                  </span>
-                )}
-                {tab === "fridge" && (
-                  <span className="tab-icon tab-icon--svg" aria-hidden>
-                    <FridgeIcon />
-                  </span>
-                )}
-                {tab === "all" && "All"}
+                {tab === "fridge" ? "Fridge" : "Freezer"}
                 <span className="tab-count">{counts[tab]}</span>
               </button>
             ))}
@@ -394,7 +375,7 @@ export default function App() {
             )}
             {!loading && !error && filteredItems.length === 0 && (
               <p className="state-message state-empty">
-                No items{filter !== "all" ? ` in the ${filter}` : ""}. Tap Add below to track something.
+                No items in the {filter}. Tap Add below to track something.
               </p>
             )}
             <ul className="item-list">
