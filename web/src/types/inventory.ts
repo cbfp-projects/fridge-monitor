@@ -28,7 +28,7 @@ export interface Inventory {
 
 export type InventoryAction = "add" | "update" | "delete";
 
-export type LocationFilter = "all" | Location;
+export type LocationFilter = Location;
 
 export interface InventoryUpdateRequest {
   secret: string;
