@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-27T03:54:42.852Z",
+  "updatedAt": "2026-05-27T23:35:09.167Z",
   "shoppingBag": [],
   "items": [
     {
@@ -29,6 +29,15 @@
       "name": "Canola oil",
       "checked": false,
       "addedAt": "2026-05-25T21:28:48.192Z"
+    },
+    {
+      "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
+      "name": "Whole milk",
+      "sourceItemId": "550e8400-e29b-41d4-a716-446655440000",
+      "quantity": 1,
+      "unit": "Quart",
+      "checked": false,
+      "addedAt": "2026-05-27T23:35:08.492Z"
     }
   ],
   "history": [
