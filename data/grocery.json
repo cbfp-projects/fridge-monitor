@@ -1,17 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-26T23:38:03.923Z",
-  "shoppingBag": [
-    {
-      "id": "4b09693a-3058-44b0-b0e6-b3a6a7d8648f",
-      "name": "Whole milk",
-      "sourceItemId": "550e8400-e29b-41d4-a716-446655440000",
-      "quantity": 1,
-      "unit": "Quart",
-      "checked": false,
-      "addedAt": "2026-05-26T23:37:17.846Z"
-    }
-  ],
+  "updatedAt": "2026-05-27T03:54:42.852Z",
+  "shoppingBag": [],
   "items": [
     {
       "id": "eeba1a12-2359-40ab-b5ae-d19b05899dc2",
@@ -42,6 +32,15 @@
     }
   ],
   "history": [
+    {
+      "id": "4b09693a-3058-44b0-b0e6-b3a6a7d8648f",
+      "name": "Whole milk",
+      "sourceItemId": "550e8400-e29b-41d4-a716-446655440000",
+      "quantity": 1,
+      "unit": "Quart",
+      "checked": false,
+      "addedAt": "2026-05-26T23:37:17.846Z"
+    },
     {
       "id": "cef1b447-33fd-471d-8b4b-0e828d95a187",
       "name": "Test",
