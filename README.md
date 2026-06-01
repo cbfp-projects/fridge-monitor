@@ -1,12 +1,13 @@
 # Fridge Monitor
 
-A household web app to track fridge and freezer contents with expiration dates. Data lives in [`data/inventory.json`](data/inventory.json) and [`data/grocery.json`](data/grocery.json); the UI is a React SPA on GitHub Pages.
+A household web app to track fridge and freezer contents with expiration dates. Data lives in [`data/inventory.json`](data/inventory.json), [`data/grocery.json`](data/grocery.json), and [`data/recipes.json`](data/recipes.json); the UI is a React SPA on GitHub Pages.
 
 ## Architecture
 
 - **Read:** Loads both JSON files via the GitHub Contents API (always current; refetches when you return to the tab). Local dev falls back to mock JSON in `web/public/data/`.
 - **Write:** Updates files via the [GitHub Contents API](https://docs.github.com/en/rest/repos/contents) (~1–3s). The UI updates immediately (optimistic), then syncs in the background.
 - **Grocery list:** Tap **Buy** on a fridge item or **Add item** on the grocery tab to add to the grocery list; check items off while shopping, then either **Check in bag** or **Clear checked**. The shopping bag tab can clear items or send them back into the fridge/freezer flow.
+- **Recipe suggestions:** The fridge screen groups suggestions into **Can make now**, **Missing 1–2 items**, and **Needs shopping** based on normalized ingredient matching and expiring-soon inventory.
 - **Add suggestions:** When adding an item, the name field suggests recent products from current inventory and `nameHistory` in `data/inventory.json` (kept after you remove an item, not shown in the list).
 - **Deploy:** Pushes to `main` that touch `web/` run [Deploy to GitHub Pages](.github/workflows/deploy.yml).
 
