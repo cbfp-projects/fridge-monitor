@@ -1,0 +1,35 @@
+name: Validate MCP config
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".mcp.json"
+      - "scripts/run_recipe_mcp.py"
+      - "scripts/validate_mcp.py"
+      - ".github/workflows/validate-mcp.yml"
+  pull_request:
+    paths:
+      - ".mcp.json"
+      - "scripts/run_recipe_mcp.py"
+      - "scripts/validate_mcp.py"
+      - ".github/workflows/validate-mcp.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install "mcp[cli]>=1.15.0" "httpx>=0.28.1" "aiofiles>=24.1.0" uv
+
+      - name: Validate MCP server config and handshake
+        run: python scripts/validate_mcp.py

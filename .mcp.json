@@ -4,10 +4,13 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/suraj-yadav-aiml/recipe-mcp",
-        "mcp",
-        "run",
-        "recipe_server.py"
+        "mcp[cli]>=1.15.0",
+        "--with",
+        "httpx>=0.28.1",
+        "--with",
+        "aiofiles>=24.1.0",
+        "python",
+        "scripts/run_recipe_mcp.py"
       ]
     }
   }

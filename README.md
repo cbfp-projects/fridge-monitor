@@ -25,11 +25,13 @@ A household web app to track fridge and freezer contents with expiration dates. 
    | `HOUSEHOLD_SECRET` | Household password (checked in the app before save) |
    | `CONTENTS_WRITE_TOKEN` | Fine-grained PAT for this repo with **Contents: Read and write** |
 
-3. **Enable GitHub Pages:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+3. Install [`uv`](https://docs.astral.sh/uv/) (required for `uvx`, used by `.mcp.json`).
 
-4. Push to `main` or run the Deploy workflow so the live bundle includes the secrets above.
+4. **Enable GitHub Pages:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 
-5. Open the live site, enter the household password when adding items, and confirm saves complete (subtitle shows “Saving…” briefly).
+5. Push to `main` or run the Deploy workflow so the live bundle includes the secrets above.
+
+6. Open the live site, enter the household password when adding items, and confirm saves complete (subtitle shows “Saving…” briefly).
 
 ## Local development
 
@@ -41,13 +43,34 @@ npm run dev
 
 ## MCP server dependency
 
-This repository includes a Claude-compatible MCP config at `.mcp.json` that adds the `recipe-mcp` server from:
+This repository includes a Claude-compatible MCP config at `.mcp.json` for `recipe-mcp`.
 
 - `https://github.com/suraj-yadav-aiml/recipe-mcp`
+- pinned to commit `e4d946b3268b68940f5f0f76fceddb3a5852f069` (via `scripts/run_recipe_mcp.py`)
 
-Prerequisite:
+Prerequisites:
 
-- Install `uv` so `uvx` is available on your PATH.
+- `uv` installed and `uvx` on your PATH
+- Python 3 available on your PATH
+
+### How to use `recipe-mcp`
+
+Once your MCP client loads `.mcp.json`, you should see:
+
+- tools like `search_recipes`, `get_recipe_details`, `create_meal_plan`, `search_by_first_letter`, `get_random_recipe`
+- resources under `recipes://...` (for example `recipes://cuisines`, `recipes://meal-plans`, `recipes://stats`)
+
+Common prompts to try:
+
+- “Search for 5 pasta recipes and summarize key ingredients.”
+- “Create a 3-day meal plan using recipe IDs 52771, 52772, and 52773.”
+- “Show recipe collection stats.”
+
+Troubleshooting:
+
+- `uvx: command not found`: install `uv` and restart your shell.
+- MCP server fails to start: run `python scripts/validate_mcp.py` from repo root.
+- Network failures: the launcher downloads pinned upstream source at startup; retry when network access is available.
 
 Without `VITE_REPO_*` set, the app loads mock data from `web/public/data/inventory.json`.
 
