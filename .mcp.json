@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "recipe-mcp": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/suraj-yadav-aiml/recipe-mcp",
+        "mcp",
+        "run",
+        "recipe_server.py"
+      ]
+    }
+  }
+}

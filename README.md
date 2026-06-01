@@ -39,6 +39,16 @@ npm install
 npm run dev
 ```
 
+## MCP server dependency
+
+This repository includes a Claude-compatible MCP config at `.mcp.json` that adds the `recipe-mcp` server from:
+
+- `https://github.com/suraj-yadav-aiml/recipe-mcp`
+
+Prerequisite:
+
+- Install `uv` so `uvx` is available on your PATH.
+
 Without `VITE_REPO_*` set, the app loads mock data from `web/public/data/inventory.json`.
 
 To test saves against GitHub locally, copy `.env.example` to `.env.local`:
