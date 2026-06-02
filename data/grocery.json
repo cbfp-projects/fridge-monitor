@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-27T23:35:14.157Z",
+  "updatedAt": "2026-06-02T04:35:11.770Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -39,6 +39,12 @@
       "name": "Canola oil",
       "checked": false,
       "addedAt": "2026-05-25T21:28:48.192Z"
+    },
+    {
+      "id": "baad067c-84eb-4edf-885b-284b2332e9a7",
+      "name": "Chocolate pudding",
+      "checked": false,
+      "addedAt": "2026-06-02T04:35:11.114Z"
     }
   ],
   "history": [
