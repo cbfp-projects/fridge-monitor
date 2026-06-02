@@ -6,6 +6,7 @@ import {
   fetchInventory,
   saveInventoryUpdate,
 } from "./api/inventory";
+import { fetchRecipes } from "./api/recipes";
 import { AddItemBar } from "./components/AddItemBar";
 import { AppHeader } from "./components/AppHeader";
 import { DeleteConfirmModal } from "./components/DeleteConfirmModal";
@@ -13,13 +14,17 @@ import { GroceryItemFormModal } from "./components/GroceryItemFormModal";
 import { GroceryView } from "./components/GroceryView";
 import { ItemCard } from "./components/ItemCard";
 import { ItemFormModal } from "./components/ItemFormModal";
+import { RecipeSuggestionsSection } from "./components/RecipeSuggestionsSection";
 import { ShoppingBagView } from "./components/ShoppingBagView";
 import type { AppScreen } from "./types/app";
 import type { GroceryItem, GroceryList } from "./types/grocery";
 import type { Inventory, InventoryAction, InventoryItem, LocationFilter } from "./types/inventory";
+import type { RecipeBook, RecipeMatch } from "./types/recipe";
 import { applyGroceryMutation, createGroceryItem, groceryItemFromInventory } from "./utils/grocery-mutation";
 import { applyInventoryMutation } from "./utils/inventory-mutation";
 import { formatDateTime } from "./utils/expiry";
+import { normalizeIngredientName } from "./utils/item-normalization";
+import { buildRecipeSuggestions } from "./utils/recipe-matching";
 import "./App.css";
 import "./fridge-theme.css";
 
@@ -29,11 +34,13 @@ export default function App() {
   const [screen, setScreen] = useState<AppScreen>("fridge");
   const [inventory, setInventory] = useState<Inventory | null>(null);
   const [grocery, setGrocery] = useState<GroceryList | null>(null);
+  const [recipes, setRecipes] = useState<RecipeBook | null>(null);
   const [filter, setFilter] = useState<LocationFilter>("fridge");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [recipeError, setRecipeError] = useState<string | null>(null);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [formMode, setFormMode] = useState<FormMode>(null);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
@@ -60,9 +67,25 @@ export default function App() {
     }
     if (!background) setError(null);
     try {
-      const [inv, gro] = await Promise.all([fetchInventory(), fetchGrocery()]);
+      const [inv, gro, rec] = await Promise.all([
+        fetchInventory(),
+        fetchGrocery(),
+        fetchRecipes().catch((err) => {
+          const message = err instanceof Error ? err.message : "Failed to load recipes";
+          setRecipeError(message);
+          return {
+            version: 1,
+            updatedAt: new Date().toISOString(),
+            recipes: [],
+          } satisfies RecipeBook;
+        }),
+      ]);
       setInventory(inv);
       setGrocery(gro);
+      setRecipes(rec);
+      if (rec.recipes.length > 0) {
+        setRecipeError(null);
+      }
       setSyncError(null);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to load data";
@@ -113,6 +136,12 @@ export default function App() {
     const items = inventory.items.filter((i) => i.location === filter);
     return [...items].sort((a, b) => a.expirationDate.localeCompare(b.expirationDate));
   }, [inventory, filter]);
+
+  const recipeSuggestions = useMemo(() => {
+    const recipeList = recipes?.recipes ?? [];
+    const itemList = inventory?.items ?? [];
+    return buildRecipeSuggestions(recipeList, itemList);
+  }, [recipes, inventory]);
 
   const counts = useMemo(() => {
     const items = inventory?.items ?? [];
@@ -215,6 +244,39 @@ export default function App() {
     closeGroceryForm();
     const entry = createGroceryItem(item);
     await persistGrocery("add", entry, (prev) => applyGroceryMutation(prev, "add", entry));
+  }
+
+  async function handleAddMissingIngredients(match: RecipeMatch) {
+    if (!grocery) {
+      setSyncError("Failed to load grocery list");
+      return;
+    }
+
+    const existingNames = new Set(
+      [...grocery.items, ...(grocery.shoppingBag ?? [])]
+        .map((item) => normalizeIngredientName(item.name))
+        .filter(Boolean),
+    );
+    const pendingNames = new Set<string>();
+
+    let added = 0;
+    for (const ingredient of match.missingIngredients) {
+      const normalized = normalizeIngredientName(ingredient.name);
+      if (!normalized) continue;
+      if (existingNames.has(normalized) || pendingNames.has(normalized)) continue;
+      const entry = createGroceryItem({
+        name: ingredient.name,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
+      });
+      await persistGrocery("add", entry, (prev) => applyGroceryMutation(prev, "add", entry));
+      pendingNames.add(normalized);
+      added += 1;
+    }
+
+    if (added === 0) {
+      setSyncError("Missing ingredients are already on your grocery list");
+    }
   }
 
   function handleGroceryToggle(item: { id: string }) {
@@ -394,6 +456,12 @@ export default function App() {
                 </li>
               ))}
             </ul>
+            <RecipeSuggestionsSection
+              loading={loading}
+              error={recipeError}
+              suggestions={recipeSuggestions}
+              onAddMissing={handleAddMissingIngredients}
+            />
           </main>
 
         </div>

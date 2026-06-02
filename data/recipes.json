@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-01T00:00:00.000Z",
+  "recipes": [
+    {
+      "id": "scrambled-eggs",
+      "name": "Creamy Scrambled Eggs",
+      "ingredients": [
+        { "name": "Eggs", "quantity": 2, "unit": "pieces" },
+        { "name": "Milk", "quantity": 2, "unit": "tbsp" }
+      ]
+    },
+    {
+      "id": "yogurt-parfait",
+      "name": "Yogurt Fruit Parfait",
+      "ingredients": [
+        { "name": "Greek yogurt", "quantity": 1, "unit": "cup" },
+        { "name": "Berries", "quantity": 1, "unit": "cup" },
+        { "name": "Honey", "quantity": 1, "unit": "tbsp" }
+      ]
+    },
+    {
+      "id": "veggie-frittata",
+      "name": "Veggie Frittata",
+      "ingredients": [
+        { "name": "Eggs", "quantity": 6, "unit": "pieces" },
+        { "name": "Milk", "quantity": 0.25, "unit": "cup" },
+        { "name": "Onion", "quantity": 0.5, "unit": "piece" },
+        { "name": "Bell pepper", "quantity": 1, "unit": "piece" },
+        { "name": "Cheddar cheese", "quantity": 0.5, "unit": "cup" }
+      ]
+    }
+  ]
+}

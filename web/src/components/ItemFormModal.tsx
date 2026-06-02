@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { Inventory, InventoryAction, InventoryItem, NameHistoryEntry } from "../types/inventory";
 import {
   buildSuggestionEntries,
@@ -35,11 +35,6 @@ export function ItemFormModal({
   const [secret, setSecret] = useState(() => sessionStorage.getItem(SECRET_KEY) ?? "");
   const [nameFocused, setNameFocused] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setDraft(item);
-    setNameFocused(false);
-  }, [item]);
 
   const allSuggestions = useMemo(
     () => (inventory ? buildSuggestionEntries(inventory) : []),
