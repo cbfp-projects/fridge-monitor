@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-02T04:35:11.770Z",
+  "updatedAt": "2026-06-02T04:35:24.359Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -45,6 +45,12 @@
       "name": "Chocolate pudding",
       "checked": false,
       "addedAt": "2026-06-02T04:35:11.114Z"
+    },
+    {
+      "id": "19c8f658-5eeb-4778-a8a6-f8243e346b42",
+      "name": "Spindrift",
+      "checked": false,
+      "addedAt": "2026-06-02T04:35:23.893Z"
     }
   ],
   "history": [
