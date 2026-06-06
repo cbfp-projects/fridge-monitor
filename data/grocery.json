@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-06T21:06:58.903Z",
+  "updatedAt": "2026-06-06T21:07:11.867Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -57,6 +57,12 @@
       "name": "Rice pudding",
       "checked": false,
       "addedAt": "2026-06-06T21:06:58.542Z"
+    },
+    {
+      "id": "8206840b-6f02-45c6-9291-c7fa4a355df3",
+      "name": "Pain Trader Joe",
+      "checked": false,
+      "addedAt": "2026-06-06T21:07:11.403Z"
     }
   ],
   "history": [
