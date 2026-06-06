@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-06T21:07:11.867Z",
+  "updatedAt": "2026-06-06T21:07:22.217Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -63,6 +63,12 @@
       "name": "Pain Trader Joe",
       "checked": false,
       "addedAt": "2026-06-06T21:07:11.403Z"
+    },
+    {
+      "id": "6628b3a1-f0e5-467b-9e16-7e5e9eb2e44c",
+      "name": "Cereals",
+      "checked": false,
+      "addedAt": "2026-06-06T21:07:21.664Z"
     }
   ],
   "history": [
