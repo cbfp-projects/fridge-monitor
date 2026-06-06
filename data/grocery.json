@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-02T04:35:24.359Z",
+  "updatedAt": "2026-06-06T21:06:58.903Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -51,6 +51,12 @@
       "name": "Spindrift",
       "checked": false,
       "addedAt": "2026-06-02T04:35:23.893Z"
+    },
+    {
+      "id": "12bba3b7-d653-46e5-a697-166a4bcaef43",
+      "name": "Rice pudding",
+      "checked": false,
+      "addedAt": "2026-06-06T21:06:58.542Z"
     }
   ],
   "history": [
