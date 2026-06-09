@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-09T01:40:49.156Z",
+  "updatedAt": "2026-06-09T01:42:36.768Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -61,7 +61,7 @@
     {
       "id": "8206840b-6f02-45c6-9291-c7fa4a355df3",
       "name": "Pain Trader Joe",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-06-06T21:07:11.403Z"
     },
     {
