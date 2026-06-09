@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-09T01:36:44.437Z",
+  "updatedAt": "2026-06-09T01:40:47.309Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -67,7 +67,7 @@
     {
       "id": "6628b3a1-f0e5-467b-9e16-7e5e9eb2e44c",
       "name": "Cereals",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-06-06T21:07:21.664Z"
     }
   ],
