@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-15T00:19:11.670Z",
+  "updatedAt": "2026-06-15T00:19:12.669Z",
   "shoppingBag": [
     {
       "id": "7fbcef14-ded7-49e6-b156-9a5c4098edf8",
@@ -55,7 +55,7 @@
     {
       "id": "12bba3b7-d653-46e5-a697-166a4bcaef43",
       "name": "Rice pudding",
-      "checked": false,
+      "checked": true,
       "addedAt": "2026-06-06T21:06:58.542Z"
     },
     {
